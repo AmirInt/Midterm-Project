@@ -64,9 +64,9 @@ public class UI extends JFrame {
     public UI() {
 
 //        Setting the frame
-        setSize(1280, 720);
+        setSize(640, 560);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        add(setLoginPanel());
+        add (setTeacherPanel());
         setVisible(true);
     }
 
@@ -79,8 +79,7 @@ public class UI extends JFrame {
         JLabel entranceMode = new JLabel("Enter as: ");
         String[] comboItems = {"Admin", "Teacher", "Student"};
         comboBox = new JComboBox<>(comboItems);
-        comboBox.setSelectedIndex(0);
-        JPanel introPanel = new JPanel(new FlowLayout());
+        JPanel introPanel = new JPanel(new GridBagLayout());
         introPanel.add(entranceMode);
         introPanel.add(comboBox);
 
@@ -106,18 +105,17 @@ public class UI extends JFrame {
         loginBoard.add(creditsBoard, BorderLayout.CENTER);
         loginBoard.add(errorLabel, BorderLayout.SOUTH);
 
-        loginPanel = new JPanel();
-        loginPanel.setLayout(new GridBagLayout());
+        loginPanel = new JPanel(new BorderLayout());
+        loginPanel.add(introPanel, BorderLayout.NORTH);
+        JPanel secondaryPanel = new JPanel(new GridBagLayout());
         constraints.gridx = 0;
         constraints.gridy = 0;
-        constraints.anchor = GridBagConstraints.NORTHWEST;
-        loginPanel.add(introPanel);
-        constraints.gridy = 1;
         constraints.anchor = GridBagConstraints.CENTER;
-        loginPanel.add(loginBoard, constraints);
-        constraints.gridy = 2;
+        secondaryPanel.add(loginBoard, constraints);
+        constraints.gridy = 1;
         constraints.anchor = GridBagConstraints.NORTH;
-        loginPanel.add(enterButton, constraints);
+        secondaryPanel.add(enterButton, constraints);
+        loginPanel.add(secondaryPanel, BorderLayout.CENTER);
         return loginPanel;
     }
 
@@ -128,13 +126,15 @@ public class UI extends JFrame {
     public JPanel setStudentPanel() {
 
 //        Creating the general studentPanel here with its buttons and fields
-        studentPanel = new JPanel(new BorderLayout(10, 10));
+        studentPanel = new JPanel(new BorderLayout(30, 30));
         studentMainB = new JButton("Main Panel");
         changeUNAndPW = new JButton("Change username or password");
         purchaseBalance = new JButton("Purchase balance");
         reserve = new JButton("Reserve food");
         selectCredits = new JButton("Select new credits");
         studentPanelExit = new JButton("Exit");
+        JPanel exitPanel = new JPanel(new GridBagLayout());
+        exitPanel.add(studentPanelExit, constraints);
         JPanel studentOptionsPanel = new JPanel(new GridLayout(20, 1));
         studentOptionsPanel.add(studentMainB);
         studentOptionsPanel.add(changeUNAndPW);
@@ -142,26 +142,30 @@ public class UI extends JFrame {
         studentOptionsPanel.add(reserve);
         studentOptionsPanel.add(selectCredits);
         studentPanel.add(studentOptionsPanel, BorderLayout.WEST);
-        studentPanel.add(studentPanelExit, BorderLayout.NORTH);
+        studentPanel.add(exitPanel, BorderLayout.NORTH);
 
 //        Creating the main panel here
-        studentMainPanel = new JPanel(new BorderLayout());
-        JPanel studentMainPanelSecondary = new JPanel(new GridLayout(4, 1, 10, 10));
-        JLabel userName = new JLabel("user");
-        JLabel password = new JLabel("pass");
-        JLabel average = new JLabel("avg");
-        JLabel balance = new JLabel("blc");
+        studentMainPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+        JPanel studentMainPanelSecondary = new JPanel(new GridLayout(20, 2, 5, 5));
+        studentMainPanelSecondary.setBorder(BorderFactory.createTitledBorder("Credentials:"));
+        JLabel userName = new JLabel("Username: ");
+        JLabel password = new JLabel("Password: ");
+        JLabel average = new JLabel("Average: ");
+        JLabel balance = new JLabel("Balance: ");
         studentMainPanelSecondary.add(userName);
+        studentMainPanelSecondary.add(new JLabel("Username"));
         studentMainPanelSecondary.add(password);
+        studentMainPanelSecondary.add(new JLabel("Password"));
         studentMainPanelSecondary.add(average);
+        studentMainPanelSecondary.add(new JLabel("Average"));
         studentMainPanelSecondary.add(balance);
-        JPanel studentMainPanelTertiary = new JPanel(new BorderLayout());
-        JLabel creditsList = new JLabel("Current credits:");
+        studentMainPanelSecondary.add(new JLabel("Balance"));
+;
         JList<Object> currentCredits = new JList<>();
-        studentMainPanelTertiary.add(creditsList, BorderLayout.NORTH);
-        studentMainPanelTertiary.add(currentCredits, BorderLayout.CENTER);
+        currentCredits.setPreferredSize(new Dimension(200, currentCredits.getHeight()));
+        currentCredits.setBorder(BorderFactory.createTitledBorder("Current credits:"));
         studentMainPanel.add(studentMainPanelSecondary, BorderLayout.WEST);
-        studentMainPanel.add(studentMainPanelTertiary, BorderLayout.CENTER);
+        studentMainPanel.add(currentCredits, BorderLayout.EAST);
 
 //        Creating the panel in charge of resetting password and username
         UNPSPanel = new JPanel(new GridBagLayout());
@@ -302,16 +306,35 @@ public class UI extends JFrame {
         reservationPanel.add(reservationPanelSecondary, BorderLayout.CENTER);
 
 //        Creating panel responsible for credit selection
-        creditSelectionPanel = new JPanel(new BorderLayout());
-        JPanel creditSelectionPanelSecondary = new JPanel(new BorderLayout());
+        creditSelectionPanel = new JPanel(new GridBagLayout());
+        JButton addCreditButton = new JButton("Add This Course");
+        JTextArea courseDescription = new JTextArea("Description");
+        courseDescription.setEnabled(false);
+        courseDescription.setDisabledTextColor(Color.BLACK);
+        courseDescription.setBorder(BorderFactory.createTitledBorder("Course description"));
+        constraints.gridy = 0;
+        constraints.gridx = 0;
+        constraints.ipadx = 100;
+        constraints.ipady = 100;
+        constraints.anchor = GridBagConstraints.SOUTH;
+        creditSelectionPanel.add(courseDescription, constraints);
+        constraints.gridy = 0;
+        constraints.gridx = 1;
+        constraints.ipady = 400;
+        constraints.ipadx = 200;
+        constraints.anchor = GridBagConstraints.CENTER;
         JList<Object> presentCreditsList = new JList<>();
-        JButton addCreditButton = new JButton("Claim");
-        creditSelectionPanelSecondary.add(presentCreditsList, BorderLayout.CENTER);
-        creditSelectionPanelSecondary.add(addCreditButton, BorderLayout.SOUTH);
-        creditSelectionPanel.add(creditSelectionPanelSecondary, BorderLayout.CENTER);
+        presentCreditsList.setBorder(BorderFactory.createTitledBorder("AvailableCourses"));
+        creditSelectionPanel.add(presentCreditsList, constraints);
+        constraints.gridy = 1;
+        constraints.gridx = 0;
+        constraints.ipady = 10;
+        constraints.ipadx = 40;
+        constraints.anchor = GridBagConstraints.CENTER;
+        creditSelectionPanel.add(addCreditButton, constraints);
 
 //        Setting the initial panel as the first page
-        studentPanel.add(studentMainPanel, BorderLayout.CENTER);
+        studentPanel.add(creditSelectionPanel, BorderLayout.CENTER);
 
         return studentPanel;
     }
@@ -328,21 +351,31 @@ public class UI extends JFrame {
         teacherChangeUNAndPW = new JButton("Change username or password");
         teacherAddToCoursesB = new JButton("Add to Courses");
         teacherPanelExit = new JButton("Exit");
+        JPanel exitPanel = new JPanel(new GridBagLayout());
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.ipadx = teacherPanelExit.getX();
+        constraints.gridy = teacherPanelExit.getY();
+        exitPanel.add(teacherPanelExit, constraints);
         JPanel teacherOptionsPanel = new JPanel(new GridLayout(20, 1));
         teacherOptionsPanel.add(teacherMainB);
         teacherOptionsPanel.add(teacherChangeUNAndPW);
         teacherOptionsPanel.add(teacherAddToCoursesB);
         teacherPanel.add(teacherOptionsPanel, BorderLayout.WEST);
-        teacherPanel.add(teacherPanelExit, BorderLayout.NORTH);
+        teacherPanel.add(exitPanel, BorderLayout.NORTH);
 
 //        Creating the main panel
-        teacherMainPanel = new JPanel(new BorderLayout());
-        JPanel teacherMainPanelSecondary = new JPanel(new GridLayout(4, 1, 10, 10));
-        JLabel userName = new JLabel("user");
-        JLabel password = new JLabel("pass");
+        teacherMainPanel = new JPanel(new BorderLayout(30, 30));
+        JPanel teacherMainPanelSecondary = new JPanel(new GridLayout(10, 2, 10, 10));
+        teacherMainPanelSecondary.setBorder(BorderFactory.createTitledBorder("Credentials"));
+        JLabel userName = new JLabel("Username: ");
+        JLabel password = new JLabel("Password: ");
         teacherMainPanelSecondary.add(userName);
+        teacherMainPanelSecondary.add(new JLabel("Username"));
         teacherMainPanelSecondary.add(password);
-        JPanel teacherMainPanelTertiary = new JPanel(new GridLayout(4, 2, 10, 10));
+        teacherMainPanelSecondary.add(new JLabel("Password"));
+        teacherMainPanelSecondary.setPreferredSize(new Dimension(100, teacherMainPanelSecondary.getPreferredSize().height));
+        JPanel teacherMainPanelTertiary = new JPanel(new GridBagLayout());
         JLabel creditsList = new JLabel("Credits you currently run:");
         JLabel studentsList = new JLabel("Students in this course:");
         JList<Object> currentCredits = new JList<>();
