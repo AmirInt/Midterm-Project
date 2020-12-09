@@ -1,8 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Class UI is responsible for creating the graphical user interface
+ * by creating the JFrame and the different panels for the students,
+ * the teachers and the admin.
+ */
 public class UI extends JFrame {
 
+//    loginPanel accessories
     JPanel loginPanel;
     JComboBox<String> comboBox;
     JPanel loginBoard;
@@ -12,6 +18,7 @@ public class UI extends JFrame {
     JPasswordField passwordField;
     JButton enterButton;
 
+    //    studentPanel accessories
     JPanel studentPanel;
     JPanel studentMainPanel;
     JButton studentMainB;
@@ -25,6 +32,7 @@ public class UI extends JFrame {
     JPanel reservationPanel;
     JPanel creditSelectionPanel;
 
+    //    teacherPanel accessories
     JPanel teacherPanel;
     JPanel teacherMainPanel;
     JPanel teacherUNPSPanel;
@@ -34,6 +42,7 @@ public class UI extends JFrame {
     JButton teacherPanelExit;
     JButton teacherAddToCoursesB;
 
+    //    adminPanel accessories
     JPanel adminPanel;
     JPanel adminMainPanel;
     JPanel adminUNPSPanel;
@@ -45,8 +54,13 @@ public class UI extends JFrame {
     JButton adminSTB;
     JButton adminPanelExit;
 
+//    constraints variable is for managing the items of the GridBagLayout
+//    wherever its needed
     GridBagConstraints constraints = new GridBagConstraints();
 
+    /**
+     * Instantiates this class
+     */
     public UI() {
 
 //        Setting the frame
@@ -56,7 +70,12 @@ public class UI extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Creates the login panel as the starting page
+     * @return the login panel it has built for further processes
+     */
     public JPanel setLoginPanel() {
+
         JLabel entranceMode = new JLabel("Enter as: ");
         String[] comboItems = {"Admin", "Teacher", "Student"};
         comboBox = new JComboBox<>(comboItems);
@@ -102,8 +121,13 @@ public class UI extends JFrame {
         return loginPanel;
     }
 
+    /**
+     * Creates the student panel and its different sections
+     * @return the panel it has built for further processes
+     */
     public JPanel setStudentPanel() {
 
+//        Creating the general studentPanel here with its buttons and fields
         studentPanel = new JPanel(new BorderLayout(10, 10));
         studentMainB = new JButton("Main Panel");
         changeUNAndPW = new JButton("Change username or password");
@@ -120,6 +144,7 @@ public class UI extends JFrame {
         studentPanel.add(studentOptionsPanel, BorderLayout.WEST);
         studentPanel.add(studentPanelExit, BorderLayout.NORTH);
 
+//        Creating the main panel here
         studentMainPanel = new JPanel(new BorderLayout());
         JPanel studentMainPanelSecondary = new JPanel(new GridLayout(4, 1, 10, 10));
         JLabel userName = new JLabel("user");
@@ -138,6 +163,7 @@ public class UI extends JFrame {
         studentMainPanel.add(studentMainPanelSecondary, BorderLayout.WEST);
         studentMainPanel.add(studentMainPanelTertiary, BorderLayout.CENTER);
 
+//        Creating the panel in charge of resetting password and username
         UNPSPanel = new JPanel(new GridBagLayout());
         JPanel secondary = new JPanel(new GridLayout(4, 2, 5, 5));
         JLabel newUsername = new JLabel("New username");
@@ -162,6 +188,7 @@ public class UI extends JFrame {
         constraints.gridwidth = 1;
         UNPSPanel.add(secondary, constraints);
 
+//        Creating the panel for managing balance
         balancePanel = new JPanel(new GridBagLayout());
         JPanel balancePanelSecondary = new JPanel(new GridLayout(5, 1));
         JLabel cardNumberL = new JLabel("Card number: ");
@@ -188,6 +215,7 @@ public class UI extends JFrame {
         constraints.gridwidth = 1;
         balancePanel.add(balancePanelSecondary, constraints);
 
+//        Creating the panel for reserving refectory food
         reservationPanel = new JPanel(new BorderLayout());
         JPanel reservationPanelSecondary = new JPanel(new GridLayout(9, 5, 20, 20));
         JLabel Mon = new JLabel("Mon");
@@ -273,6 +301,7 @@ public class UI extends JFrame {
         reservationPanelSecondary.add(reserveButton);
         reservationPanel.add(reservationPanelSecondary, BorderLayout.CENTER);
 
+//        Creating panel responsible for credit selection
         creditSelectionPanel = new JPanel(new BorderLayout());
         JPanel creditSelectionPanelSecondary = new JPanel(new BorderLayout());
         JList<Object> presentCreditsList = new JList<>();
@@ -281,13 +310,19 @@ public class UI extends JFrame {
         creditSelectionPanelSecondary.add(addCreditButton, BorderLayout.SOUTH);
         creditSelectionPanel.add(creditSelectionPanelSecondary, BorderLayout.CENTER);
 
+//        Setting the initial panel as the first page
         studentPanel.add(studentMainPanel, BorderLayout.CENTER);
 
         return studentPanel;
     }
 
+    /**
+     * Creates the teacher panel and its different sections
+     * @return the panel it has built for further processes
+     */
     public JPanel setTeacherPanel() {
 
+//        Creating the general and initial panel here
         teacherPanel = new JPanel(new BorderLayout(30, 30));
         teacherMainB = new JButton("Main panel");
         teacherChangeUNAndPW = new JButton("Change username or password");
@@ -300,6 +335,7 @@ public class UI extends JFrame {
         teacherPanel.add(teacherOptionsPanel, BorderLayout.WEST);
         teacherPanel.add(teacherPanelExit, BorderLayout.NORTH);
 
+//        Creating the main panel
         teacherMainPanel = new JPanel(new BorderLayout());
         JPanel teacherMainPanelSecondary = new JPanel(new GridLayout(4, 1, 10, 10));
         JLabel userName = new JLabel("user");
@@ -326,6 +362,7 @@ public class UI extends JFrame {
         teacherMainPanel.add(teacherMainPanelSecondary, BorderLayout.WEST);
         teacherMainPanel.add(teacherMainPanelTertiary, BorderLayout.CENTER);
 
+//        Creating the panel for changing password and username
         teacherUNPSPanel = new JPanel(new GridBagLayout());
         JPanel secondary = new JPanel(new GridLayout(4, 2, 5, 5));
         JLabel newUsername = new JLabel("New username");
@@ -350,6 +387,7 @@ public class UI extends JFrame {
         constraints.gridwidth = 1;
         teacherUNPSPanel.add(secondary, constraints);
 
+//        Creating the panel special for defining new courses
         teacherAddToCoursesPanel = new JPanel(new GridBagLayout());
         JPanel teacherAddToCoursesPanelSecondary = new JPanel(new GridLayout(6, 2, 5, 5));
         JLabel courseNameL = new JLabel("Course name:");
@@ -382,12 +420,19 @@ public class UI extends JFrame {
         constraints.anchor = GridBagConstraints.CENTER;
         teacherAddToCoursesPanel.add(teacherAddToCoursesPanelSecondary, constraints);
 
+//        Setting the main panel as the first page
         teacherPanel.add(teacherMainPanel, BorderLayout.CENTER);
 
         return teacherPanel;
     }
 
+    /**
+     * Creates the admin panel and its different sections
+     * @return the panel it has built for further processes
+     */
     public JPanel setAdminPanel() {
+
+//        Creating the initial admin panel here
         adminPanel = new JPanel(new BorderLayout(30, 30));
         adminMainB = new JButton("Main panel");
         adminChangeUNAndPW = new JButton("Change username or password");
@@ -402,6 +447,7 @@ public class UI extends JFrame {
         adminPanel.add(adminOptionsPanel, BorderLayout.WEST);
         adminPanel.add(adminPanelExit, BorderLayout.NORTH);
 
+//        Creating the main panel here
         adminMainPanel = new JPanel(new GridBagLayout());
         JPanel adminMainPanelSecondary = new JPanel(new GridLayout(2, 2, 10, 10));
         JLabel userName = new JLabel("Username:");
@@ -414,6 +460,7 @@ public class UI extends JFrame {
         adminMainPanelSecondary.add(adminPassword);
         adminMainPanel.add(adminMainPanelSecondary, constraints);
 
+//        Creating the panel for renewing password and username
         adminUNPSPanel = new JPanel(new GridBagLayout());
         JPanel secondary = new JPanel(new GridLayout(4, 2, 5, 5));
         JLabel newUsername = new JLabel("New username");
@@ -438,6 +485,7 @@ public class UI extends JFrame {
         constraints.gridwidth = 1;
         adminUNPSPanel.add(secondary, constraints);
 
+//        Creating the panel for scheduling the refectory
         adminRefectoryPanel = new JPanel(new BorderLayout());
         JPanel adminRefectoryPanelSecondary = new JPanel(new GridLayout(9, 5, 20, 20));
         JLabel Mon = new JLabel("Mon");
@@ -521,6 +569,7 @@ public class UI extends JFrame {
         adminRefectoryPanelSecondary.add(setButton);
         adminRefectoryPanel.add(adminRefectoryPanelSecondary, BorderLayout.CENTER);
 
+//        Creating panel for managing students and teachers and their courses
         adminSTPanel = new JPanel(new GridLayout(1, 3, 30, 30));
         JPanel studentsPanel = new JPanel(new BorderLayout());
         JLabel students = new JLabel("Students:");
@@ -559,6 +608,7 @@ public class UI extends JFrame {
         adminSTPanel.add(teachersPanel);
         adminSTPanel.add(coursesPanel);
 
+//        Setting the main panel as the first page of the initial panel
         adminPanel.add(adminMainPanel, BorderLayout.CENTER);
 
         return adminPanel;
