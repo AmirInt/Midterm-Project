@@ -64,9 +64,9 @@ public class UI extends JFrame {
     public UI() {
 
 //        Setting the frame
-        setSize(640, 560);
+        setSize(740, 560);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        add (setTeacherPanel());
+        add (setLoginPanel());
         setVisible(true);
     }
 
@@ -375,23 +375,41 @@ public class UI extends JFrame {
         teacherMainPanelSecondary.add(password);
         teacherMainPanelSecondary.add(new JLabel("Password"));
         teacherMainPanelSecondary.setPreferredSize(new Dimension(100, teacherMainPanelSecondary.getPreferredSize().height));
+
         JPanel teacherMainPanelTertiary = new JPanel(new GridBagLayout());
-        JLabel creditsList = new JLabel("Credits you currently run:");
-        JLabel studentsList = new JLabel("Students in this course:");
         JList<Object> currentCredits = new JList<>();
         JList<Object> courseStudents = new JList<>();
-        JButton addToCoursesB = new JButton("Add a new Course");
+        currentCredits.setBorder(BorderFactory.createTitledBorder("Current courses"));
+        courseStudents.setBorder(BorderFactory.createTitledBorder("This course students"));
         JButton removeThisCourseB = new JButton("Remove this course");
         JTextField gradeF = new JTextField();
         JButton gradeThisStB = new JButton("Grade this student");
-        teacherMainPanelTertiary.add(creditsList);
-        teacherMainPanelTertiary.add(studentsList);
-        teacherMainPanelTertiary.add(currentCredits);
-        teacherMainPanelTertiary.add(courseStudents);
-        teacherMainPanelTertiary.add(new JLabel());
-        teacherMainPanelTertiary.add(gradeF);
-        teacherMainPanelTertiary.add(removeThisCourseB);
-        teacherMainPanelTertiary.add(gradeThisStB);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.ipady = 300;
+        constraints.ipadx = 150;
+        teacherMainPanelTertiary.add(currentCredits, constraints);
+        constraints.gridx = 1;
+        teacherMainPanelTertiary.add(courseStudents, constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.ipady = 10;
+        constraints.ipadx = 50;
+        constraints.anchor = GridBagConstraints.CENTER;
+        teacherMainPanelTertiary.add(new JLabel(), constraints);
+        constraints.gridx = 1;
+        constraints.ipady = 10;
+        constraints.ipadx = 50;
+        teacherMainPanelTertiary.add(gradeF, constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.ipady = 10;
+        constraints.ipadx = 50;
+        teacherMainPanelTertiary.add(removeThisCourseB, constraints);
+        constraints.gridx = 1;
+        constraints.ipady = 10;
+        constraints.ipadx = 50;
+        teacherMainPanelTertiary.add(gradeThisStB, constraints);
         teacherMainPanel.add(teacherMainPanelSecondary, BorderLayout.WEST);
         teacherMainPanel.add(teacherMainPanelTertiary, BorderLayout.CENTER);
 
