@@ -1,12 +1,18 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.EventListener;
 
 /**
  * Class UI is responsible for creating the graphical user interface
  * by creating the JFrame and the different panels for the students,
  * the teachers and the admin.
  */
-public class UI extends JFrame {
+public class UI {
+
+    JFrame frame;
 
 //    loginPanel accessories
     JPanel loginPanel;
@@ -21,12 +27,12 @@ public class UI extends JFrame {
     //    studentPanel accessories
     JPanel studentPanel;
     JPanel studentMainPanel;
-    JButton studentMainB;
-    JButton changeUNAndPW;
-    JButton purchaseBalance;
-    JButton reserve;
-    JButton selectCredits;
-    JButton studentPanelExit;
+    JLabel studentMainB;
+    JLabel changeUNAndPW;
+    JLabel purchaseBalance;
+    JLabel reserve;
+    JLabel selectCredits;
+    JLabel studentPanelExit;
     JPanel UNPSPanel;
     JPanel balancePanel;
     JPanel reservationPanel;
@@ -64,10 +70,11 @@ public class UI extends JFrame {
     public UI() {
 
 //        Setting the frame
-        setSize(740, 560);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        add (setLoginPanel());
-        setVisible(true);
+        frame = new JFrame("University Management System");
+        frame.setSize(740, 560);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setContentPane(setTeacherPanel());
+        frame.setVisible(true);
     }
 
     /**
@@ -76,38 +83,54 @@ public class UI extends JFrame {
      */
     public JPanel setLoginPanel() {
 
-        JLabel entranceMode = new JLabel("Enter as: ");
+        EventHandler eventHandler = new EventHandler();
+
+        JLabel entranceMode = new JLabel("Enter as");
+        entranceMode.setForeground(new Color(225, 225, 225));
+        entranceMode.setFont(new Font("", Font.PLAIN, 15));
+        entranceMode.setPreferredSize(new Dimension(90, 40));
         String[] comboItems = {"Admin", "Teacher", "Student"};
         comboBox = new JComboBox<>(comboItems);
+        comboBox.setPreferredSize(new Dimension(120, 30));
+        comboBox.setFont(new Font("", Font.PLAIN, 15));
         JPanel introPanel = new JPanel(new GridBagLayout());
         introPanel.add(entranceMode);
         introPanel.add(comboBox);
+        introPanel.setBackground(new Color(30, 50, 150));
 
         creditsBoard = new JPanel();
-        creditsBoard.setLayout(new GridLayout(2, 2, 5,5));
-        usernameField = new JTextField();
-        usernameField.setPreferredSize(new Dimension(100, 25));
-        passwordField = new JPasswordField();
-        passwordField.setPreferredSize(new Dimension(100, 25));
-        uNameLabel = new JLabel("Username:");
-        uNameLabel.setPreferredSize(new Dimension(40, 25));
-        passLabel = new JLabel("Password:");
-        passLabel.setPreferredSize(new Dimension(40, 25));
-        creditsBoard.add(uNameLabel);
+        creditsBoard.setLayout(new GridLayout(2, 1, 5,5));
+        usernameField = new JTextField("Username");
+        usernameField.addActionListener(eventHandler);
+        usernameField.setPreferredSize(new Dimension(80, 25));
+        passwordField = new JPasswordField("Password");
+        passwordField.addActionListener(eventHandler);
+        passwordField.setPreferredSize(new Dimension(80, 25));
         creditsBoard.add(usernameField);
-        creditsBoard.add(passLabel);
         creditsBoard.add(passwordField);
+        creditsBoard.setOpaque(false);
         informLabel = new JLabel("Enter ye' username and password");
+        informLabel.setPreferredSize(new Dimension(350, 50));
+        informLabel.setForeground(Color.WHITE);
+        informLabel.setFont(new Font("", Font.PLAIN, 20));
+        informLabel.setHorizontalAlignment(0);
         errorLabel = new JLabel("");
         enterButton = new JButton("Enter");
+        enterButton.setPreferredSize(new Dimension(200, 40));
+        enterButton.setForeground(new Color(0, 0, 100));
+        enterButton.setFont(new Font("", Font.PLAIN, 20));
+        enterButton.addActionListener(eventHandler);
+        enterButton.setOpaque(false);
         loginBoard = new JPanel(new BorderLayout(5, 5));
         loginBoard.add(informLabel, BorderLayout.NORTH);
         loginBoard.add(creditsBoard, BorderLayout.CENTER);
         loginBoard.add(errorLabel, BorderLayout.SOUTH);
+        loginBoard.setOpaque(false);
 
         loginPanel = new JPanel(new BorderLayout());
         loginPanel.add(introPanel, BorderLayout.NORTH);
-        JPanel secondaryPanel = new JPanel(new GridBagLayout());
+        JPanel secondaryPanel = new ImageJPanel("F:\\loading-bg-breeze-rpeast-morespace.jpeg");
+        secondaryPanel.setLayout(new GridBagLayout());
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.anchor = GridBagConstraints.CENTER;
@@ -115,6 +138,7 @@ public class UI extends JFrame {
         constraints.gridy = 1;
         constraints.anchor = GridBagConstraints.NORTH;
         secondaryPanel.add(enterButton, constraints);
+        constraints.gridy = 0;
         loginPanel.add(secondaryPanel, BorderLayout.CENTER);
         return loginPanel;
     }
@@ -125,57 +149,112 @@ public class UI extends JFrame {
      */
     public JPanel setStudentPanel() {
 
+        Color colour = new Color(30, 90, 20);
 //        Creating the general studentPanel here with its buttons and fields
-        studentPanel = new JPanel(new BorderLayout(30, 30));
-        studentMainB = new JButton("Main Panel");
-        changeUNAndPW = new JButton("Change username or password");
-        purchaseBalance = new JButton("Purchase balance");
-        reserve = new JButton("Reserve food");
-        selectCredits = new JButton("Select new credits");
-        studentPanelExit = new JButton("Exit");
-        JPanel exitPanel = new JPanel(new GridBagLayout());
-        exitPanel.add(studentPanelExit, constraints);
-        JPanel studentOptionsPanel = new JPanel(new GridLayout(20, 1));
-        studentOptionsPanel.add(studentMainB);
-        studentOptionsPanel.add(changeUNAndPW);
-        studentOptionsPanel.add(purchaseBalance);
-        studentOptionsPanel.add(reserve);
-        studentOptionsPanel.add(selectCredits);
-        studentPanel.add(studentOptionsPanel, BorderLayout.WEST);
-        studentPanel.add(exitPanel, BorderLayout.NORTH);
+        studentPanel = new ImageJPanel("C:\\Users\\l0000\\Downloads\\istockphoto-610850338-1024x1024 2.jpg");
+        studentPanel.setLayout(new BorderLayout(30, 30));
+        studentMainB = new JLabel("Main Panel");
+        studentMainB.setPreferredSize(new Dimension(80, 40));
+        studentMainB.setHorizontalAlignment(0);
+        studentMainB.setFont(new Font("", Font.PLAIN, 10));
+        studentMainB.setForeground(Color.WHITE);
+        changeUNAndPW = new JLabel("Change username or password");
+        changeUNAndPW.setPreferredSize(new Dimension(160, 40));
+        changeUNAndPW.setHorizontalAlignment(0);
+        changeUNAndPW.setFont(new Font("", Font.PLAIN, 10));
+        changeUNAndPW.setForeground(Color.WHITE);
+        purchaseBalance = new JLabel("Purchase balance");
+        purchaseBalance.setPreferredSize(new Dimension(100, 40));
+        purchaseBalance.setHorizontalAlignment(0);
+        purchaseBalance.setFont(new Font("", Font.PLAIN, 10));
+        purchaseBalance.setForeground(Color.WHITE);
+        reserve = new JLabel("Reserve food");
+        reserve.setPreferredSize(new Dimension(80, 40));
+        reserve.setHorizontalAlignment(0);
+        reserve.setFont(new Font("", Font.PLAIN, 10));
+        reserve.setForeground(Color.WHITE);
+        selectCredits = new JLabel("Select new credits");
+        selectCredits.setPreferredSize(new Dimension(1000, 40));
+        selectCredits.setHorizontalAlignment(0);
+        selectCredits.setFont(new Font("", Font.PLAIN, 10));
+        selectCredits.setForeground(Color.WHITE);
+        studentPanelExit = new JLabel("Exit");
+        studentPanelExit.setPreferredSize(new Dimension(60, 40));
+        studentPanelExit.setHorizontalAlignment(0);
+        studentPanelExit.setFont(new Font("", Font.PLAIN, 10));
+        studentPanelExit.setForeground(Color.WHITE);
+        JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 15));
+        upperPanel.setBackground(colour);
+        upperPanel.add(studentPanelExit);
+        upperPanel.add(studentMainB);
+        upperPanel.add(changeUNAndPW);
+        upperPanel.add(purchaseBalance);
+        upperPanel.add(reserve);
+        upperPanel.add(selectCredits);
+        studentPanel.add(upperPanel, BorderLayout.NORTH);
 
 //        Creating the main panel here
         studentMainPanel = new JPanel(new GridLayout(1, 2, 5, 5));
-        JPanel studentMainPanelSecondary = new JPanel(new GridLayout(20, 2, 5, 5));
-        studentMainPanelSecondary.setBorder(BorderFactory.createTitledBorder("Credentials:"));
+        studentMainPanel.setOpaque(false);
+        JPanel studentMainPanelSecondary = new JPanel(new GridBagLayout());
+        studentMainPanelSecondary.setOpaque(false);
+        studentMainPanelSecondary.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
+                "Credentials", 4, 0, new Font("", Font.PLAIN, 15)));
         JLabel userName = new JLabel("Username: ");
+        userName.setPreferredSize(new Dimension(180, 50));
+        userName.setFont(new Font("", Font.PLAIN, 20));
         JLabel password = new JLabel("Password: ");
+        password.setPreferredSize(new Dimension(180, 50));
+        password.setFont(new Font("", Font.PLAIN, 20));
         JLabel average = new JLabel("Average: ");
+        average.setPreferredSize(new Dimension(180, 50));
+        average.setFont(new Font("", Font.PLAIN, 20));
         JLabel balance = new JLabel("Balance: ");
-        studentMainPanelSecondary.add(userName);
-        studentMainPanelSecondary.add(new JLabel("Username"));
-        studentMainPanelSecondary.add(password);
-        studentMainPanelSecondary.add(new JLabel("Password"));
-        studentMainPanelSecondary.add(average);
-        studentMainPanelSecondary.add(new JLabel("Average"));
-        studentMainPanelSecondary.add(balance);
-        studentMainPanelSecondary.add(new JLabel("Balance"));
-;
+        balance.setPreferredSize(new Dimension(180, 50));
+        balance.setFont(new Font("", Font.PLAIN, 20));
+        studentMainPanelSecondary.add(userName, constraints);
+        constraints.gridx = 1;
+        studentMainPanelSecondary.add(new JLabel("Username"), constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        studentMainPanelSecondary.add(password, constraints);
+        constraints.gridx = 1;
+        studentMainPanelSecondary.add(new JLabel("Password"), constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        studentMainPanelSecondary.add(average, constraints);
+        constraints.gridx = 1;
+        studentMainPanelSecondary.add(new JLabel("Average"), constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        studentMainPanelSecondary.add(balance, constraints);
+        constraints.gridx = 1;
+        studentMainPanelSecondary.add(new JLabel("Balance"), constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
         JList<Object> currentCredits = new JList<>();
-        currentCredits.setPreferredSize(new Dimension(200, currentCredits.getHeight()));
-        currentCredits.setBorder(BorderFactory.createTitledBorder("Current credits:"));
-        studentMainPanel.add(studentMainPanelSecondary, BorderLayout.WEST);
-        studentMainPanel.add(currentCredits, BorderLayout.EAST);
+        currentCredits.setOpaque(false);
+        currentCredits.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
+                "Current Credits", 4, 0, new Font("", Font.PLAIN, 15)));
+        studentMainPanel.add(studentMainPanelSecondary);
+        studentMainPanel.add(currentCredits);
 
 //        Creating the panel in charge of resetting password and username
         UNPSPanel = new JPanel(new GridBagLayout());
+        UNPSPanel.setOpaque(false);
         JPanel secondary = new JPanel(new GridLayout(4, 2, 5, 5));
+        secondary.setOpaque(false);
         JLabel newUsername = new JLabel("New username");
+        newUsername.setPreferredSize(new Dimension(180, 50));
+        newUsername.setFont(new Font("", Font.PLAIN, 20));
         JLabel newPassword = new JLabel("New Password");
+        newPassword.setPreferredSize(new Dimension(180, 50));
+        newPassword.setFont(new Font("", Font.PLAIN, 20));
         JTextField newUsernameField = new JTextField();
         JPasswordField newPasswordField = new JPasswordField();
         JLabel notice = new JLabel("");
         JButton changeButton = new JButton("Change");
+        changeButton.setFont(new Font("", Font.PLAIN, 20));
         secondary.add(newUsername);
         secondary.add(newUsernameField);
         secondary.add(newPassword);
@@ -191,18 +270,31 @@ public class UI extends JFrame {
         constraints.gridwidth = 0;
         constraints.gridwidth = 1;
         UNPSPanel.add(secondary, constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 0;
+        constraints.gridheight = 0;
 
 //        Creating the panel for managing balance
         balancePanel = new JPanel(new GridBagLayout());
+        balancePanel.setOpaque(false);
         JPanel balancePanelSecondary = new JPanel(new GridLayout(5, 1));
+        balancePanelSecondary.setOpaque(false);
         JLabel cardNumberL = new JLabel("Card number: ");
+        cardNumberL.setPreferredSize(new Dimension(180, 50));
+        cardNumberL.setFont(new Font("", Font.PLAIN, 20));
         JTextField cardNumberT = new JTextField();
         JLabel balanceL = new JLabel("Balance: ");
+        balanceL.setPreferredSize(new Dimension(180, 50));
+        balanceL.setFont(new Font("", Font.PLAIN, 20));
         JTextField balanceT = new JTextField();
         JLabel passwordL = new JLabel("Password: ");
+        passwordL.setPreferredSize(new Dimension(180, 50));
+        passwordL.setFont(new Font("", Font.PLAIN, 20));
         JPasswordField passwordF = new JPasswordField();
         JLabel noticeBalance = new JLabel("");
         JButton purchaseBalanceB = new JButton("Purchase");
+        purchaseBalanceB.setFont(new Font("", Font.PLAIN, 20));
         balancePanelSecondary.add(cardNumberL);
         balancePanelSecondary.add(cardNumberT);
         balancePanelSecondary.add(balanceL);
@@ -220,17 +312,26 @@ public class UI extends JFrame {
         balancePanel.add(balancePanelSecondary, constraints);
 
 //        Creating the panel for reserving refectory food
-        reservationPanel = new JPanel(new BorderLayout());
-        JPanel reservationPanelSecondary = new JPanel(new GridLayout(9, 5, 20, 20));
-        JLabel Mon = new JLabel("Mon");
-        JLabel Tue = new JLabel("Tue");
-        JLabel Wed = new JLabel("Wed");
-        JLabel Thu = new JLabel("Thu");
-        JLabel Fri = new JLabel("Fri");
-        JLabel Sat = new JLabel("Sat");
-        JLabel Sun = new JLabel("Sun");
+        reservationPanel = new JPanel(new GridLayout(9, 5, 20, 20));
+        reservationPanel.setOpaque(false);
+        JLabel Mon = new JLabel("Mon", SwingConstants.CENTER);
+        Mon.setFont(new Font("", Font.PLAIN, 20));
+        JLabel Tue = new JLabel("Tue", SwingConstants.CENTER);
+        Tue.setFont(new Font("", Font.PLAIN, 20));
+        JLabel Wed = new JLabel("Wed", SwingConstants.CENTER);
+        Wed.setFont(new Font("", Font.PLAIN, 20));
+        JLabel Thu = new JLabel("Thu", SwingConstants.CENTER);
+        Thu.setFont(new Font("", Font.PLAIN, 20));
+        JLabel Fri = new JLabel("Fri", SwingConstants.CENTER);
+        Fri.setFont(new Font("", Font.PLAIN, 20));
+        JLabel Sat = new JLabel("Sat", SwingConstants.CENTER);
+        Sat.setFont(new Font("", Font.PLAIN, 20));
+        JLabel Sun = new JLabel("Sun", SwingConstants.CENTER);
+        Sun.setFont(new Font("", Font.PLAIN, 20));
         JLabel dinner = new JLabel("Dinner");
+        dinner.setFont(new Font("", Font.PLAIN, 20));
         JLabel lunch = new JLabel("Lunch");
+        lunch.setFont(new Font("", Font.PLAIN, 20));
         JLabel MonLunch = new JLabel();
         JLabel TueLunch = new JLabel();
         JLabel WedLunch = new JLabel();
@@ -246,95 +347,108 @@ public class UI extends JFrame {
         JLabel SatDinner = new JLabel();
         JLabel SunDinner = new JLabel();
         JCheckBox MonLunchCh = new JCheckBox();
+        MonLunchCh.setOpaque(false);
         JCheckBox TueLunchCh = new JCheckBox();
+        TueLunchCh.setOpaque(false);
         JCheckBox WedLunchCh = new JCheckBox();
+        WedLunchCh.setOpaque(false);
         JCheckBox ThuLunchCh = new JCheckBox();
+        ThuLunchCh.setOpaque(false);
         JCheckBox FriLunchCh = new JCheckBox();
+        FriLunchCh.setOpaque(false);
         JCheckBox SatLunchCh = new JCheckBox();
+        SatLunchCh.setOpaque(false);
         JCheckBox SunLunchCh = new JCheckBox();
+        SunLunchCh.setOpaque(false);
         JCheckBox MonDinnerCh = new JCheckBox();
+        MonDinnerCh.setOpaque(false);
         JCheckBox TueDinnerCh = new JCheckBox();
+        TueDinnerCh.setOpaque(false);
         JCheckBox WedDinnerCh = new JCheckBox();
+        WedDinnerCh.setOpaque(false);
         JCheckBox ThuDinnerCh = new JCheckBox();
+        ThuDinnerCh.setOpaque(false);
         JCheckBox FriDinnerCh = new JCheckBox();
+        FriDinnerCh.setOpaque(false);
         JCheckBox SatDinnerCh = new JCheckBox();
+        SatDinnerCh.setOpaque(false);
         JCheckBox SunDinnerCh = new JCheckBox();
-        JLabel balanceLabel = new JLabel("Balance");
+        SunDinnerCh.setOpaque(false);
+        JLabel balanceLabel = new JLabel("Balance", SwingConstants.CENTER);
+        balanceLabel.setFont(new Font("", Font.PLAIN, 20));
         JButton reserveButton = new JButton("Reserve");
-        reservationPanelSecondary.add(new JLabel(""));
-        reservationPanelSecondary.add(lunch);
-        reservationPanelSecondary.add(new JLabel(""));
-        reservationPanelSecondary.add(dinner);
-        reservationPanelSecondary.add(new JLabel(""));
-        reservationPanelSecondary.add(Mon);
-        reservationPanelSecondary.add(MonLunch);
-        reservationPanelSecondary.add(MonLunchCh);
-        reservationPanelSecondary.add(MonDinner);
-        reservationPanelSecondary.add(MonDinnerCh);
-        reservationPanelSecondary.add(Tue);
-        reservationPanelSecondary.add(TueLunch);
-        reservationPanelSecondary.add(TueLunchCh);
-        reservationPanelSecondary.add(TueDinner);
-        reservationPanelSecondary.add(TueDinnerCh);
-        reservationPanelSecondary.add(Wed);
-        reservationPanelSecondary.add(WedLunch);
-        reservationPanelSecondary.add(WedLunchCh);
-        reservationPanelSecondary.add(WedDinner);
-        reservationPanelSecondary.add(WedDinnerCh);
-        reservationPanelSecondary.add(Thu);
-        reservationPanelSecondary.add(ThuLunch);
-        reservationPanelSecondary.add(ThuLunchCh);
-        reservationPanelSecondary.add(ThuDinner);
-        reservationPanelSecondary.add(ThuDinnerCh);
-        reservationPanelSecondary.add(Fri);
-        reservationPanelSecondary.add(FriLunch);
-        reservationPanelSecondary.add(FriLunchCh);
-        reservationPanelSecondary.add(FriDinner);
-        reservationPanelSecondary.add(FriDinnerCh);
-        reservationPanelSecondary.add(Sat);
-        reservationPanelSecondary.add(SatLunch);
-        reservationPanelSecondary.add(SatLunchCh);
-        reservationPanelSecondary.add(SatDinner);
-        reservationPanelSecondary.add(SatDinnerCh);
-        reservationPanelSecondary.add(Sun);
-        reservationPanelSecondary.add(SunLunch);
-        reservationPanelSecondary.add(SunLunchCh);
-        reservationPanelSecondary.add(SunDinner);
-        reservationPanelSecondary.add(SunDinnerCh);
-        reservationPanelSecondary.add(balanceLabel);
-        reservationPanelSecondary.add(reserveButton);
-        reservationPanel.add(reservationPanelSecondary, BorderLayout.CENTER);
+        reserveButton.setFont(new Font("", Font.PLAIN, 20));
+        reservationPanel.add(new JLabel(""));
+        reservationPanel.add(lunch);
+        reservationPanel.add(new JLabel(""));
+        reservationPanel.add(dinner);
+        reservationPanel.add(new JLabel(""));
+        reservationPanel.add(Mon);
+        reservationPanel.add(MonLunch);
+        reservationPanel.add(MonLunchCh);
+        reservationPanel.add(MonDinner);
+        reservationPanel.add(MonDinnerCh);
+        reservationPanel.add(Tue);
+        reservationPanel.add(TueLunch);
+        reservationPanel.add(TueLunchCh);
+        reservationPanel.add(TueDinner);
+        reservationPanel.add(TueDinnerCh);
+        reservationPanel.add(Wed);
+        reservationPanel.add(WedLunch);
+        reservationPanel.add(WedLunchCh);
+        reservationPanel.add(WedDinner);
+        reservationPanel.add(WedDinnerCh);
+        reservationPanel.add(Thu);
+        reservationPanel.add(ThuLunch);
+        reservationPanel.add(ThuLunchCh);
+        reservationPanel.add(ThuDinner);
+        reservationPanel.add(ThuDinnerCh);
+        reservationPanel.add(Fri);
+        reservationPanel.add(FriLunch);
+        reservationPanel.add(FriLunchCh);
+        reservationPanel.add(FriDinner);
+        reservationPanel.add(FriDinnerCh);
+        reservationPanel.add(Sat);
+        reservationPanel.add(SatLunch);
+        reservationPanel.add(SatLunchCh);
+        reservationPanel.add(SatDinner);
+        reservationPanel.add(SatDinnerCh);
+        reservationPanel.add(Sun);
+        reservationPanel.add(SunLunch);
+        reservationPanel.add(SunLunchCh);
+        reservationPanel.add(SunDinner);
+        reservationPanel.add(SunDinnerCh);
+        reservationPanel.add(balanceLabel);
+        reservationPanel.add(reserveButton);
 
 //        Creating panel responsible for credit selection
-        creditSelectionPanel = new JPanel(new GridBagLayout());
+        creditSelectionPanel = new JPanel(new GridLayout(1, 2));
+        creditSelectionPanel.setOpaque(false);
+        JPanel creditSelectionPanelSecondary = new JPanel(new GridBagLayout());
+        creditSelectionPanelSecondary.setOpaque(false);
         JButton addCreditButton = new JButton("Add This Course");
+        addCreditButton.setFont(new Font("", Font.PLAIN, 20));
         JTextArea courseDescription = new JTextArea("Description");
+        courseDescription.setOpaque(false);
+        courseDescription.setFont(new Font("", courseDescription.getFont().getStyle(), 20));
+        courseDescription.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
+                "Course Description", 4, 0, new Font("", Font.PLAIN, 15)));
         courseDescription.setEnabled(false);
-        courseDescription.setDisabledTextColor(Color.BLACK);
-        courseDescription.setBorder(BorderFactory.createTitledBorder("Course description"));
-        constraints.gridy = 0;
-        constraints.gridx = 0;
-        constraints.ipadx = 100;
-        constraints.ipady = 100;
-        constraints.anchor = GridBagConstraints.SOUTH;
-        creditSelectionPanel.add(courseDescription, constraints);
-        constraints.gridy = 0;
-        constraints.gridx = 1;
-        constraints.ipady = 400;
-        constraints.ipadx = 200;
-        constraints.anchor = GridBagConstraints.CENTER;
-        JList<Object> presentCreditsList = new JList<>();
-        presentCreditsList.setBorder(BorderFactory.createTitledBorder("AvailableCourses"));
-        creditSelectionPanel.add(presentCreditsList, constraints);
+        courseDescription.setDisabledTextColor(colour);
+        courseDescription.setPreferredSize(new Dimension(300, 200));
+        creditSelectionPanelSecondary.add(courseDescription);
         constraints.gridy = 1;
-        constraints.gridx = 0;
-        constraints.ipady = 10;
-        constraints.ipadx = 40;
-        constraints.anchor = GridBagConstraints.CENTER;
-        creditSelectionPanel.add(addCreditButton, constraints);
+        creditSelectionPanelSecondary.add(addCreditButton, constraints);
+        constraints.gridy = 0;
+        creditSelectionPanel.add(creditSelectionPanelSecondary);
+        JList<Object> presentCreditsList = new JList<>();
+        presentCreditsList.setOpaque(false);
+        presentCreditsList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
+                "Available Courses", 4, 0, new Font("", Font.PLAIN, 15)));
+        creditSelectionPanel.add(presentCreditsList);
 
 //        Setting the initial panel as the first page
-        studentPanel.add(creditSelectionPanel, BorderLayout.CENTER);
+        studentPanel.add(creditSelectionPanel);
 
         return studentPanel;
     }
@@ -344,6 +458,8 @@ public class UI extends JFrame {
      * @return the panel it has built for further processes
      */
     public JPanel setTeacherPanel() {
+
+        Color colour = new Color(250, 160, 40);
 
 //        Creating the general and initial panel here
         teacherPanel = new JPanel(new BorderLayout(30, 30));
@@ -663,5 +779,26 @@ public class UI extends JFrame {
         adminPanel.add(adminMainPanel, BorderLayout.CENTER);
 
         return adminPanel;
+    }
+
+    public class EventHandler implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource().equals(usernameField) || e.getSource().equals(passwordField)
+                || e.getSource().equals(enterButton)) {
+                int entranceMode = comboBox.getSelectedIndex();
+                switch(entranceMode) {
+                    case 0:
+                        frame.setContentPane(setAdminPanel());
+                        break;
+                    case 1:
+                        frame.setContentPane(setTeacherPanel());
+                        break;
+                    case 2:
+                        frame.setContentPane(setStudentPanel());
+                }
+            }
+        }
     }
 }
