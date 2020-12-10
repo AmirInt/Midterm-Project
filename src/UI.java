@@ -1,11 +1,8 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.channels.FileLock;
-import java.util.EventListener;
 
 /**
  * Class UI is responsible for creating the graphical user interface
@@ -76,7 +73,8 @@ public class UI {
         frame.setSize(740, 560);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLoginPanel();
-        frame.setContentPane(loginPanel);
+        setAdminPanel();
+        frame.setContentPane(adminPanel);
         frame.setVisible(true);
     }
 
@@ -199,11 +197,16 @@ public class UI {
         studentPanel.add(upperPanel, BorderLayout.NORTH);
 
 //        Setting the initial panel as the first page
-        setStudentMainBoard(colour, commonBorder, mainFont);
+        setStudentMainBoard(commonBorder, mainFont);
         studentPanel.add(studentMainPanel);
     }
 
-    public void setStudentMainBoard(Color colour, TitledBorder commonBorder, Font mainFont) {
+    /**
+     * Creates the student main panel
+     * @param commonBorder The border used
+     * @param mainFont The font used
+     */
+    public void setStudentMainBoard(TitledBorder commonBorder, Font mainFont) {
 
         studentMainPanel = new JPanel(new GridLayout(1, 2, 5, 5));
         studentMainPanel.setOpaque(false);
@@ -249,7 +252,11 @@ public class UI {
         studentMainPanel.add(currentCredits);
     }
 
-    public void setStudentUNPSPanel(Color colour, TitledBorder commonBorder, Font mainFont) {
+    /**
+     * Creates the student username and password resetting panel
+     * @param mainFont The font used
+     */
+    public void setStudentUNPSPanel(Font mainFont) {
 
         UNPSPanel = new JPanel(new GridBagLayout());
         UNPSPanel.setOpaque(false);
@@ -287,6 +294,10 @@ public class UI {
         constraints.gridheight = 0;
     }
 
+    /**
+     * Creates the student balance management panel
+     * @param mainFont The font used
+     */
     public void setBalancePanel(Font mainFont) {
 
         balancePanel = new JPanel(new GridBagLayout());
@@ -325,6 +336,10 @@ public class UI {
         balancePanel.add(balancePanelSecondary, constraints);
     }
 
+    /**
+     * Creates the student reservation panel
+     * @param mainFont The font used
+     */
     public void setStudentReservationPanel(Font mainFont) {
 
         reservationPanel = new JPanel(new GridLayout(9, 5, 20, 20));
@@ -437,6 +452,12 @@ public class UI {
         reservationPanel.add(reserveButton);
     }
 
+    /**
+     * Creates the student credit selection panel
+     * @param colour The colour used
+     * @param commonBorder The border used
+     * @param mainFont The font used
+     */
     public void setCreditSelectionPanel(Color colour, TitledBorder commonBorder, Font mainFont) {
 
         creditSelectionPanel = new JPanel(new GridLayout(1, 2));
@@ -510,6 +531,11 @@ public class UI {
         teacherPanel.add(teacherMainPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Creates the teacher main panel
+     * @param commonBorder The border used
+     * @param mainFont The font used
+     */
     public void setTeacherMainBoard(TitledBorder commonBorder, Font mainFont) {
 
         teacherMainPanel = new JPanel(new BorderLayout(10, 30));
@@ -577,6 +603,10 @@ public class UI {
         teacherMainPanel.add(teacherMainPanelTertiary, BorderLayout.CENTER);
     }
 
+    /**
+     * Creates the teacher username and password management panel
+     * @param mainFont The font used
+     */
     public void setTeacherUNPSPanel(Font mainFont) {
 
         teacherUNPSPanel = new JPanel(new GridBagLayout());
@@ -615,6 +645,10 @@ public class UI {
         constraints.gridheight = 0;
     }
 
+    /**
+     * Creates the teacher course building panel
+     * @param mainFont The font used
+     */
     public void setCourseCreationPanel(Font mainFont) {
         teacherAddToCoursesPanel = new JPanel(new GridBagLayout());
         teacherAddToCoursesPanel.setOpaque(false);
@@ -715,11 +749,16 @@ public class UI {
         adminPanel.add(upperPanel, BorderLayout.NORTH);
 
 //        Setting the main panel as the first page of the initial panel
-        setAdminMainBoard(mainFont);
-        adminPanel.add(adminMainPanel, BorderLayout.CENTER);
+        setAdminSTPanel(commonBorder);
+        adminPanel.add(adminSTPanel, BorderLayout.CENTER);
     }
 
+    /**
+     * Creates the admin main panel
+     * @param mainFont The font used
+     */
     public void setAdminMainBoard(Font mainFont) {
+
         adminMainPanel = new JPanel(new GridBagLayout());
         adminMainPanel.setOpaque(false);
         JPanel adminMainPanelSecondary = new JPanel(new GridLayout(2, 2, 10, 10));
@@ -736,9 +775,15 @@ public class UI {
         adminMainPanelSecondary.add(adminUserName);
         adminMainPanelSecondary.add(password);
         adminMainPanelSecondary.add(adminPassword);
-        adminMainPanel.add(adminMainPanelSecondary, constraints);
+
+//        Adding the adminMainPanel as the first page
+        adminPanel.add(adminMainPanel);
     }
 
+    /**
+     * Creates the admin username and password management panel
+     * @param mainFont The font used
+     */
     public void setAdminUNPSPanel(Font mainFont) {
         adminUNPSPanel = new JPanel(new GridBagLayout());
         adminUNPSPanel.setOpaque(false);
@@ -776,6 +821,10 @@ public class UI {
         constraints.gridheight = 0;
     }
 
+    /**
+     * Creates the adming refectory management panel
+     * @param mainFont The font used
+     */
     public void setAdminRefectoryPanel(Font mainFont) {
         adminRefectoryPanel = new JPanel(new BorderLayout());
         JPanel adminRefectoryPanelSecondary = new JPanel(new GridLayout(9, 5, 20, 20));
@@ -877,40 +926,53 @@ public class UI {
         adminRefectoryPanel.add(adminRefectoryPanelSecondary, BorderLayout.CENTER);
     }
 
-    public void setAdminSTPanel() {
+    /**
+     * Creates the admin student and teacher panel
+     */
+    public void setAdminSTPanel(TitledBorder commonBorder) {
 
         adminSTPanel = new JPanel(new GridLayout(1, 3, 30, 30));
+        adminSTPanel.setOpaque(false);
         JPanel studentsPanel = new JPanel(new BorderLayout());
-        JLabel students = new JLabel("Students:");
+        studentsPanel.setOpaque(false);
         JList<Object> studentsList = new JList<>();
+        studentsList.setOpaque(false);
+        TitledBorder border1 = new TitledBorder(commonBorder, "Students");
+        studentsList.setBorder(border1);
         JPanel addRemovePanel = new JPanel(new FlowLayout());
+        addRemovePanel.setOpaque(false);
         JButton addStudentB = new JButton("Add");
         JButton removeStudentB = new JButton("Remove");
         addRemovePanel.add(addStudentB);
         addRemovePanel.add(removeStudentB);
-        studentsPanel.add(students, BorderLayout.NORTH);
         studentsPanel.add(studentsList, BorderLayout.CENTER);
         studentsPanel.add(addRemovePanel, BorderLayout.SOUTH);
         JPanel teachersPanel = new JPanel(new BorderLayout());
-        JLabel teachers = new JLabel("Teachers:");
+        teachersPanel.setOpaque(false);
         JList<Object> teachersList = new JList<>();
+        teachersList.setOpaque(false);
+        TitledBorder border2 = new TitledBorder(commonBorder, "Teachers");
+        teachersList.setBorder(border2);
         JPanel addRemovePanel2 = new JPanel(new FlowLayout());
+        addRemovePanel2.setOpaque(false);
         JButton addTeacherB = new JButton("Add");
         JButton removeTeacherB = new JButton("Remove");
         addRemovePanel2.add(addTeacherB);
         addRemovePanel2.add(removeTeacherB);
-        teachersPanel.add(teachers, BorderLayout.NORTH);
         teachersPanel.add(teachersList, BorderLayout.CENTER);
         teachersPanel.add(addRemovePanel2, BorderLayout.SOUTH);
         JPanel coursesPanel = new JPanel(new BorderLayout());
-        JLabel courses = new JLabel("Courses:");
+        coursesPanel.setOpaque(false);
         JList<Object> coursesList = new JList<>();
+        coursesList.setOpaque(false);
+        TitledBorder border3 = new TitledBorder(commonBorder, "Courses");
+        coursesList.setBorder(border3);
         JPanel addRemovePanel3 = new JPanel(new FlowLayout());
+        addRemovePanel3.setOpaque(false);
         JButton addCourseB = new JButton("Add");
         JButton removeCourseB = new JButton("Remove");
         addRemovePanel3.add(addCourseB);
         addRemovePanel3.add(removeCourseB);
-        coursesPanel.add(courses, BorderLayout.NORTH);
         coursesPanel.add(coursesList, BorderLayout.CENTER);
         coursesPanel.add(addRemovePanel3, BorderLayout.SOUTH);
         adminSTPanel.add(studentsPanel);
