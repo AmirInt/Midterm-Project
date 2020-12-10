@@ -1,8 +1,10 @@
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.nio.channels.FileLock;
 import java.util.EventListener;
 
 /**
@@ -43,10 +45,10 @@ public class UI {
     JPanel teacherMainPanel;
     JPanel teacherUNPSPanel;
     JPanel teacherAddToCoursesPanel;
-    JButton teacherMainB;
-    JButton teacherChangeUNAndPW;
-    JButton teacherPanelExit;
-    JButton teacherAddToCoursesB;
+    JLabel teacherMainB;
+    JLabel teacherChangeUNAndPW;
+    JLabel teacherPanelExit;
+    JLabel teacherAddToCoursesB;
 
     //    adminPanel accessories
     JPanel adminPanel;
@@ -54,11 +56,11 @@ public class UI {
     JPanel adminUNPSPanel;
     JPanel adminRefectoryPanel;
     JPanel adminSTPanel;
-    JButton adminMainB;
-    JButton adminChangeUNAndPW;
-    JButton adminRefectoryB;
-    JButton adminSTB;
-    JButton adminPanelExit;
+    JLabel adminMainB;
+    JLabel adminChangeUNAndPW;
+    JLabel adminRefectoryB;
+    JLabel adminSTB;
+    JLabel adminPanelExit;
 
 //    constraints variable is for managing the items of the GridBagLayout
 //    wherever its needed
@@ -73,20 +75,20 @@ public class UI {
         frame = new JFrame("University Management System");
         frame.setSize(740, 560);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setContentPane(setTeacherPanel());
+        setLoginPanel();
+        frame.setContentPane(loginPanel);
         frame.setVisible(true);
     }
 
     /**
      * Creates the login panel as the starting page
-     * @return the login panel it has built for further processes
      */
-    public JPanel setLoginPanel() {
+    public void setLoginPanel() {
 
         EventHandler eventHandler = new EventHandler();
 
         JLabel entranceMode = new JLabel("Enter as");
-        entranceMode.setForeground(new Color(225, 225, 225));
+        entranceMode.setForeground(Color.WHITE);
         entranceMode.setFont(new Font("", Font.PLAIN, 15));
         entranceMode.setPreferredSize(new Dimension(90, 40));
         String[] comboItems = {"Admin", "Teacher", "Student"};
@@ -129,7 +131,7 @@ public class UI {
 
         loginPanel = new JPanel(new BorderLayout());
         loginPanel.add(introPanel, BorderLayout.NORTH);
-        JPanel secondaryPanel = new ImageJPanel("F:\\loading-bg-breeze-rpeast-morespace.jpeg");
+        JPanel secondaryPanel = new ImageJPanel("Project Files\\loading-bg-breeze-rpeast-morespace.jpeg");
         secondaryPanel.setLayout(new GridBagLayout());
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -140,48 +142,51 @@ public class UI {
         secondaryPanel.add(enterButton, constraints);
         constraints.gridy = 0;
         loginPanel.add(secondaryPanel, BorderLayout.CENTER);
-        return loginPanel;
     }
 
     /**
      * Creates the student panel and its different sections
-     * @return the panel it has built for further processes
      */
-    public JPanel setStudentPanel() {
+    public void setStudentPanel() {
 
         Color colour = new Color(30, 90, 20);
+        Font barFont = new Font("", Font.PLAIN, 10);
+        TitledBorder commonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
+                "Credentials", 4, 0, new Font("", Font.PLAIN, 15));
+        Font mainFont = new Font("", Font.PLAIN, 20);
+
 //        Creating the general studentPanel here with its buttons and fields
-        studentPanel = new ImageJPanel("C:\\Users\\l0000\\Downloads\\istockphoto-610850338-1024x1024 2.jpg");
+        studentPanel = new ImageJPanel("Project Files\\istockphoto-610850338-1024x1024 2.jpg");
         studentPanel.setLayout(new BorderLayout(30, 30));
         studentMainB = new JLabel("Main Panel");
         studentMainB.setPreferredSize(new Dimension(80, 40));
         studentMainB.setHorizontalAlignment(0);
-        studentMainB.setFont(new Font("", Font.PLAIN, 10));
+        studentMainB.setFont(barFont);
         studentMainB.setForeground(Color.WHITE);
         changeUNAndPW = new JLabel("Change username or password");
         changeUNAndPW.setPreferredSize(new Dimension(160, 40));
         changeUNAndPW.setHorizontalAlignment(0);
-        changeUNAndPW.setFont(new Font("", Font.PLAIN, 10));
+        changeUNAndPW.setFont(barFont);
         changeUNAndPW.setForeground(Color.WHITE);
         purchaseBalance = new JLabel("Purchase balance");
         purchaseBalance.setPreferredSize(new Dimension(100, 40));
         purchaseBalance.setHorizontalAlignment(0);
-        purchaseBalance.setFont(new Font("", Font.PLAIN, 10));
+        purchaseBalance.setFont(barFont);
         purchaseBalance.setForeground(Color.WHITE);
         reserve = new JLabel("Reserve food");
         reserve.setPreferredSize(new Dimension(80, 40));
         reserve.setHorizontalAlignment(0);
-        reserve.setFont(new Font("", Font.PLAIN, 10));
+        reserve.setFont(barFont);
         reserve.setForeground(Color.WHITE);
         selectCredits = new JLabel("Select new credits");
-        selectCredits.setPreferredSize(new Dimension(1000, 40));
+        selectCredits.setPreferredSize(new Dimension(100, 40));
         selectCredits.setHorizontalAlignment(0);
-        selectCredits.setFont(new Font("", Font.PLAIN, 10));
+        selectCredits.setFont(barFont);
         selectCredits.setForeground(Color.WHITE);
         studentPanelExit = new JLabel("Exit");
         studentPanelExit.setPreferredSize(new Dimension(60, 40));
         studentPanelExit.setHorizontalAlignment(0);
-        studentPanelExit.setFont(new Font("", Font.PLAIN, 10));
+        studentPanelExit.setFont(barFont);
         studentPanelExit.setForeground(Color.WHITE);
         JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 15));
         upperPanel.setBackground(colour);
@@ -193,25 +198,30 @@ public class UI {
         upperPanel.add(selectCredits);
         studentPanel.add(upperPanel, BorderLayout.NORTH);
 
-//        Creating the main panel here
+//        Setting the initial panel as the first page
+        setStudentMainBoard(colour, commonBorder, mainFont);
+        studentPanel.add(studentMainPanel);
+    }
+
+    public void setStudentMainBoard(Color colour, TitledBorder commonBorder, Font mainFont) {
+
         studentMainPanel = new JPanel(new GridLayout(1, 2, 5, 5));
         studentMainPanel.setOpaque(false);
         JPanel studentMainPanelSecondary = new JPanel(new GridBagLayout());
         studentMainPanelSecondary.setOpaque(false);
-        studentMainPanelSecondary.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
-                "Credentials", 4, 0, new Font("", Font.PLAIN, 15)));
+        studentMainPanelSecondary.setBorder(commonBorder);
         JLabel userName = new JLabel("Username: ");
         userName.setPreferredSize(new Dimension(180, 50));
-        userName.setFont(new Font("", Font.PLAIN, 20));
+        userName.setFont(mainFont);
         JLabel password = new JLabel("Password: ");
         password.setPreferredSize(new Dimension(180, 50));
-        password.setFont(new Font("", Font.PLAIN, 20));
+        password.setFont(mainFont);
         JLabel average = new JLabel("Average: ");
         average.setPreferredSize(new Dimension(180, 50));
-        average.setFont(new Font("", Font.PLAIN, 20));
+        average.setFont(mainFont);
         JLabel balance = new JLabel("Balance: ");
         balance.setPreferredSize(new Dimension(180, 50));
-        balance.setFont(new Font("", Font.PLAIN, 20));
+        balance.setFont(mainFont);
         studentMainPanelSecondary.add(userName, constraints);
         constraints.gridx = 1;
         studentMainPanelSecondary.add(new JLabel("Username"), constraints);
@@ -234,27 +244,28 @@ public class UI {
         constraints.gridy = 0;
         JList<Object> currentCredits = new JList<>();
         currentCredits.setOpaque(false);
-        currentCredits.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
-                "Current Credits", 4, 0, new Font("", Font.PLAIN, 15)));
+        currentCredits.setBorder(commonBorder);
         studentMainPanel.add(studentMainPanelSecondary);
         studentMainPanel.add(currentCredits);
+    }
 
-//        Creating the panel in charge of resetting password and username
+    public void setStudentUNPSPanel(Color colour, TitledBorder commonBorder, Font mainFont) {
+
         UNPSPanel = new JPanel(new GridBagLayout());
         UNPSPanel.setOpaque(false);
         JPanel secondary = new JPanel(new GridLayout(4, 2, 5, 5));
         secondary.setOpaque(false);
         JLabel newUsername = new JLabel("New username");
         newUsername.setPreferredSize(new Dimension(180, 50));
-        newUsername.setFont(new Font("", Font.PLAIN, 20));
+        newUsername.setFont(mainFont);
         JLabel newPassword = new JLabel("New Password");
         newPassword.setPreferredSize(new Dimension(180, 50));
-        newPassword.setFont(new Font("", Font.PLAIN, 20));
+        newPassword.setFont(mainFont);
         JTextField newUsernameField = new JTextField();
         JPasswordField newPasswordField = new JPasswordField();
         JLabel notice = new JLabel("");
         JButton changeButton = new JButton("Change");
-        changeButton.setFont(new Font("", Font.PLAIN, 20));
+        changeButton.setFont(mainFont);
         secondary.add(newUsername);
         secondary.add(newUsernameField);
         secondary.add(newPassword);
@@ -274,27 +285,29 @@ public class UI {
         constraints.gridy = 0;
         constraints.gridwidth = 0;
         constraints.gridheight = 0;
+    }
 
-//        Creating the panel for managing balance
+    public void setBalancePanel(Font mainFont) {
+
         balancePanel = new JPanel(new GridBagLayout());
         balancePanel.setOpaque(false);
         JPanel balancePanelSecondary = new JPanel(new GridLayout(5, 1));
         balancePanelSecondary.setOpaque(false);
         JLabel cardNumberL = new JLabel("Card number: ");
         cardNumberL.setPreferredSize(new Dimension(180, 50));
-        cardNumberL.setFont(new Font("", Font.PLAIN, 20));
+        cardNumberL.setFont(mainFont);
         JTextField cardNumberT = new JTextField();
         JLabel balanceL = new JLabel("Balance: ");
         balanceL.setPreferredSize(new Dimension(180, 50));
-        balanceL.setFont(new Font("", Font.PLAIN, 20));
+        balanceL.setFont(mainFont);
         JTextField balanceT = new JTextField();
         JLabel passwordL = new JLabel("Password: ");
         passwordL.setPreferredSize(new Dimension(180, 50));
-        passwordL.setFont(new Font("", Font.PLAIN, 20));
+        passwordL.setFont(mainFont);
         JPasswordField passwordF = new JPasswordField();
         JLabel noticeBalance = new JLabel("");
         JButton purchaseBalanceB = new JButton("Purchase");
-        purchaseBalanceB.setFont(new Font("", Font.PLAIN, 20));
+        purchaseBalanceB.setFont(mainFont);
         balancePanelSecondary.add(cardNumberL);
         balancePanelSecondary.add(cardNumberT);
         balancePanelSecondary.add(balanceL);
@@ -310,28 +323,30 @@ public class UI {
         constraints.gridy = 0;
         constraints.gridwidth = 1;
         balancePanel.add(balancePanelSecondary, constraints);
+    }
 
-//        Creating the panel for reserving refectory food
+    public void setStudentReservationPanel(Font mainFont) {
+
         reservationPanel = new JPanel(new GridLayout(9, 5, 20, 20));
         reservationPanel.setOpaque(false);
         JLabel Mon = new JLabel("Mon", SwingConstants.CENTER);
-        Mon.setFont(new Font("", Font.PLAIN, 20));
+        Mon.setFont(mainFont);
         JLabel Tue = new JLabel("Tue", SwingConstants.CENTER);
-        Tue.setFont(new Font("", Font.PLAIN, 20));
+        Tue.setFont(mainFont);
         JLabel Wed = new JLabel("Wed", SwingConstants.CENTER);
-        Wed.setFont(new Font("", Font.PLAIN, 20));
+        Wed.setFont(mainFont);
         JLabel Thu = new JLabel("Thu", SwingConstants.CENTER);
-        Thu.setFont(new Font("", Font.PLAIN, 20));
+        Thu.setFont(mainFont);
         JLabel Fri = new JLabel("Fri", SwingConstants.CENTER);
-        Fri.setFont(new Font("", Font.PLAIN, 20));
+        Fri.setFont(mainFont);
         JLabel Sat = new JLabel("Sat", SwingConstants.CENTER);
-        Sat.setFont(new Font("", Font.PLAIN, 20));
+        Sat.setFont(mainFont);
         JLabel Sun = new JLabel("Sun", SwingConstants.CENTER);
-        Sun.setFont(new Font("", Font.PLAIN, 20));
+        Sun.setFont(mainFont);
         JLabel dinner = new JLabel("Dinner");
-        dinner.setFont(new Font("", Font.PLAIN, 20));
+        dinner.setFont(mainFont);
         JLabel lunch = new JLabel("Lunch");
-        lunch.setFont(new Font("", Font.PLAIN, 20));
+        lunch.setFont(mainFont);
         JLabel MonLunch = new JLabel();
         JLabel TueLunch = new JLabel();
         JLabel WedLunch = new JLabel();
@@ -375,9 +390,9 @@ public class UI {
         JCheckBox SunDinnerCh = new JCheckBox();
         SunDinnerCh.setOpaque(false);
         JLabel balanceLabel = new JLabel("Balance", SwingConstants.CENTER);
-        balanceLabel.setFont(new Font("", Font.PLAIN, 20));
+        balanceLabel.setFont(mainFont);
         JButton reserveButton = new JButton("Reserve");
-        reserveButton.setFont(new Font("", Font.PLAIN, 20));
+        reserveButton.setFont(mainFont);
         reservationPanel.add(new JLabel(""));
         reservationPanel.add(lunch);
         reservationPanel.add(new JLabel(""));
@@ -420,19 +435,20 @@ public class UI {
         reservationPanel.add(SunDinnerCh);
         reservationPanel.add(balanceLabel);
         reservationPanel.add(reserveButton);
+    }
 
-//        Creating panel responsible for credit selection
+    public void setCreditSelectionPanel(Color colour, TitledBorder commonBorder, Font mainFont) {
+
         creditSelectionPanel = new JPanel(new GridLayout(1, 2));
         creditSelectionPanel.setOpaque(false);
         JPanel creditSelectionPanelSecondary = new JPanel(new GridBagLayout());
         creditSelectionPanelSecondary.setOpaque(false);
         JButton addCreditButton = new JButton("Add This Course");
-        addCreditButton.setFont(new Font("", Font.PLAIN, 20));
+        addCreditButton.setFont(mainFont);
         JTextArea courseDescription = new JTextArea("Description");
         courseDescription.setOpaque(false);
         courseDescription.setFont(new Font("", courseDescription.getFont().getStyle(), 20));
-        courseDescription.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
-                "Course Description", 4, 0, new Font("", Font.PLAIN, 15)));
+        courseDescription.setBorder(commonBorder);
         courseDescription.setEnabled(false);
         courseDescription.setDisabledTextColor(colour);
         courseDescription.setPreferredSize(new Dimension(300, 200));
@@ -443,101 +459,141 @@ public class UI {
         creditSelectionPanel.add(creditSelectionPanelSecondary);
         JList<Object> presentCreditsList = new JList<>();
         presentCreditsList.setOpaque(false);
-        presentCreditsList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
-                "Available Courses", 4, 0, new Font("", Font.PLAIN, 15)));
+        presentCreditsList.setBorder(commonBorder);
         creditSelectionPanel.add(presentCreditsList);
-
-//        Setting the initial panel as the first page
-        studentPanel.add(creditSelectionPanel);
-
-        return studentPanel;
     }
 
     /**
      * Creates the teacher panel and its different sections
-     * @return the panel it has built for further processes
      */
-    public JPanel setTeacherPanel() {
+    public void setTeacherPanel() {
 
-        Color colour = new Color(250, 160, 40);
+        Color colour = new Color(200, 50, 30);
+        Font barFont = new Font("", Font.PLAIN, 10);
+        TitledBorder commonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
+                "Credentials", 4, 0, new Font("", Font.PLAIN, 15));
+        Font mainFont = new Font("", Font.PLAIN, 20);
 
 //        Creating the general and initial panel here
-        teacherPanel = new JPanel(new BorderLayout(30, 30));
-        teacherMainB = new JButton("Main panel");
-        teacherChangeUNAndPW = new JButton("Change username or password");
-        teacherAddToCoursesB = new JButton("Add to Courses");
-        teacherPanelExit = new JButton("Exit");
-        JPanel exitPanel = new JPanel(new GridBagLayout());
+        teacherPanel = new ImageJPanel("Project Files\\istockphoto-610850338-1024x1024 2.jpg");
+        teacherPanel.setLayout(new BorderLayout());
+        teacherMainB = new JLabel("Main panel");
+        teacherMainB.setFont(barFont);
+        teacherMainB.setHorizontalAlignment(0);
+        teacherMainB.setPreferredSize(new Dimension(60, 40));
+        teacherMainB.setForeground(Color.WHITE);
+        teacherChangeUNAndPW = new JLabel("Change username or password");
+        teacherChangeUNAndPW.setFont(barFont);
+        teacherChangeUNAndPW.setHorizontalAlignment(0);
+        teacherChangeUNAndPW.setPreferredSize(new Dimension(180, 40));
+        teacherChangeUNAndPW.setForeground(Color.WHITE);
+        teacherAddToCoursesB = new JLabel("Add to Courses");
+        teacherAddToCoursesB.setFont(barFont);
+        teacherAddToCoursesB.setHorizontalAlignment(0);
+        teacherAddToCoursesB.setPreferredSize(new Dimension(80, 40));
+        teacherAddToCoursesB.setForeground(Color.WHITE);
+        teacherPanelExit = new JLabel("Exit");
+        teacherPanelExit.setFont(barFont);
+        teacherPanelExit.setPreferredSize(new Dimension(60, 40));
+        teacherPanelExit.setHorizontalAlignment(0);
+        teacherPanelExit.setForeground(Color.WHITE);
+        JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        upperPanel.add(teacherPanelExit);
+        upperPanel.add(teacherMainB);
+        upperPanel.add(teacherChangeUNAndPW);
+        upperPanel.add(teacherAddToCoursesB);
+        upperPanel.setBackground(colour);
+        teacherPanel.add(upperPanel, BorderLayout.NORTH);
+
+//        Setting the main panel as the first page
+        setTeacherMainBoard(commonBorder, mainFont);
+        teacherPanel.add(teacherMainPanel, BorderLayout.CENTER);
+    }
+
+    public void setTeacherMainBoard(TitledBorder commonBorder, Font mainFont) {
+
+        teacherMainPanel = new JPanel(new BorderLayout(10, 30));
+        teacherMainPanel.setOpaque(false);
+        JPanel teacherMainPanelSecondary = new JPanel(new GridBagLayout());
+        teacherMainPanelSecondary.setOpaque(false);
+        teacherMainPanelSecondary.setOpaque(false);
+        teacherMainPanelSecondary.setBorder(commonBorder);
+        JLabel userName = new JLabel("Username: ");
+        userName.setPreferredSize(new Dimension(120, 50));
+        userName.setFont(mainFont);
+        JLabel password = new JLabel("Password: ");
+        password.setPreferredSize(new Dimension(120, 50));
+        password.setFont(mainFont);
+        teacherMainPanelSecondary.add(userName, constraints);
+        constraints.gridy = 1;
+        constraints.anchor = GridBagConstraints.EAST;
+        teacherMainPanelSecondary.add(new JLabel("Username"), constraints);
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.gridy = 2;
+        teacherMainPanelSecondary.add(password, constraints);
+        constraints.anchor = GridBagConstraints.EAST;
+        constraints.gridy = 3;
+        teacherMainPanelSecondary.add(new JLabel("Password"), constraints);
+        constraints.anchor = GridBagConstraints.CENTER;
         constraints.gridx = 0;
         constraints.gridy = 0;
-        constraints.ipadx = teacherPanelExit.getX();
-        constraints.gridy = teacherPanelExit.getY();
-        exitPanel.add(teacherPanelExit, constraints);
-        JPanel teacherOptionsPanel = new JPanel(new GridLayout(20, 1));
-        teacherOptionsPanel.add(teacherMainB);
-        teacherOptionsPanel.add(teacherChangeUNAndPW);
-        teacherOptionsPanel.add(teacherAddToCoursesB);
-        teacherPanel.add(teacherOptionsPanel, BorderLayout.WEST);
-        teacherPanel.add(exitPanel, BorderLayout.NORTH);
-
-//        Creating the main panel
-        teacherMainPanel = new JPanel(new BorderLayout(30, 30));
-        JPanel teacherMainPanelSecondary = new JPanel(new GridLayout(10, 2, 10, 10));
-        teacherMainPanelSecondary.setBorder(BorderFactory.createTitledBorder("Credentials"));
-        JLabel userName = new JLabel("Username: ");
-        JLabel password = new JLabel("Password: ");
-        teacherMainPanelSecondary.add(userName);
-        teacherMainPanelSecondary.add(new JLabel("Username"));
-        teacherMainPanelSecondary.add(password);
-        teacherMainPanelSecondary.add(new JLabel("Password"));
-        teacherMainPanelSecondary.setPreferredSize(new Dimension(100, teacherMainPanelSecondary.getPreferredSize().height));
-
         JPanel teacherMainPanelTertiary = new JPanel(new GridBagLayout());
+        teacherMainPanelTertiary.setOpaque(false);
         JList<Object> currentCredits = new JList<>();
         JList<Object> courseStudents = new JList<>();
-        currentCredits.setBorder(BorderFactory.createTitledBorder("Current courses"));
-        courseStudents.setBorder(BorderFactory.createTitledBorder("This course students"));
+        TitledBorder border1 = new TitledBorder(commonBorder);
+        border1.setTitle("Current Credits");
+        currentCredits.setBorder(border1);
+        currentCredits.setPreferredSize(new Dimension(250, 350));
+        currentCredits.setOpaque(false);
+        TitledBorder border2 = new TitledBorder(commonBorder);
+        border2.setTitle("Course Students");
+        courseStudents.setBorder(border2);
+        courseStudents.setPreferredSize(new Dimension(250, 350));
+        courseStudents.setOpaque(false);
         JButton removeThisCourseB = new JButton("Remove this course");
+        removeThisCourseB.setPreferredSize(new Dimension(160, 40));
         JTextField gradeF = new JTextField();
+        gradeF.setPreferredSize(new Dimension(60, 30));
         JButton gradeThisStB = new JButton("Grade this student");
+        gradeThisStB.setPreferredSize(new Dimension(160, 40));
         constraints.gridx = 0;
         constraints.gridy = 0;
-        constraints.ipady = 300;
-        constraints.ipadx = 150;
         teacherMainPanelTertiary.add(currentCredits, constraints);
         constraints.gridx = 1;
         teacherMainPanelTertiary.add(courseStudents, constraints);
         constraints.gridx = 0;
         constraints.gridy = 1;
-        constraints.ipady = 10;
-        constraints.ipadx = 50;
         constraints.anchor = GridBagConstraints.CENTER;
         teacherMainPanelTertiary.add(new JLabel(), constraints);
         constraints.gridx = 1;
-        constraints.ipady = 10;
-        constraints.ipadx = 50;
         teacherMainPanelTertiary.add(gradeF, constraints);
         constraints.gridx = 0;
         constraints.gridy = 2;
-        constraints.ipady = 10;
-        constraints.ipadx = 50;
         teacherMainPanelTertiary.add(removeThisCourseB, constraints);
         constraints.gridx = 1;
-        constraints.ipady = 10;
-        constraints.ipadx = 50;
         teacherMainPanelTertiary.add(gradeThisStB, constraints);
         teacherMainPanel.add(teacherMainPanelSecondary, BorderLayout.WEST);
         teacherMainPanel.add(teacherMainPanelTertiary, BorderLayout.CENTER);
+    }
 
-//        Creating the panel for changing password and username
+    public void setTeacherUNPSPanel(Font mainFont) {
+
         teacherUNPSPanel = new JPanel(new GridBagLayout());
+        teacherUNPSPanel.setOpaque(false);
         JPanel secondary = new JPanel(new GridLayout(4, 2, 5, 5));
+        secondary.setOpaque(false);
         JLabel newUsername = new JLabel("New username");
+        newUsername.setPreferredSize(new Dimension(180, 50));
+        newUsername.setFont(mainFont);
         JLabel newPassword = new JLabel("New Password");
+        newPassword.setPreferredSize(new Dimension(180, 50));
+        newPassword.setFont(mainFont);
         JTextField newUsernameField = new JTextField();
         JPasswordField newPasswordField = new JPasswordField();
         JLabel notice = new JLabel("");
         JButton changeButton = new JButton("Change");
+        changeButton.setFont(mainFont);
         secondary.add(newUsername);
         secondary.add(newUsernameField);
         secondary.add(newPassword);
@@ -553,15 +609,34 @@ public class UI {
         constraints.gridwidth = 0;
         constraints.gridwidth = 1;
         teacherUNPSPanel.add(secondary, constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 0;
+        constraints.gridheight = 0;
+    }
 
-//        Creating the panel special for defining new courses
+    public void setCourseCreationPanel(Font mainFont) {
         teacherAddToCoursesPanel = new JPanel(new GridBagLayout());
-        JPanel teacherAddToCoursesPanelSecondary = new JPanel(new GridLayout(6, 2, 5, 5));
+        teacherAddToCoursesPanel.setOpaque(false);
+        JPanel teacherAddToCoursesPanelSecondary = new JPanel(new GridLayout(7, 2, 5, 5));
+        teacherAddToCoursesPanelSecondary.setOpaque(false);
         JLabel courseNameL = new JLabel("Course name:");
+        courseNameL.setPreferredSize(new Dimension(180, 50));
+        courseNameL.setFont(mainFont);
         JLabel dayL = new JLabel("Date:");
+        dayL.setPreferredSize(new Dimension(180, 50));
+        dayL.setFont(mainFont);
         JLabel timeL = new JLabel("Time:");
+        timeL.setPreferredSize(new Dimension(180, 50));
+        timeL.setFont(mainFont);
         JLabel creditsL = new JLabel("Credits:");
+        creditsL.setPreferredSize(new Dimension(180, 50));
+        creditsL.setFont(mainFont);
         JLabel capacityL = new JLabel("Capacity:");
+        capacityL.setPreferredSize(new Dimension(180, 50));
+        capacityL.setFont(mainFont);
+        JLabel errorLabel = new JLabel("");
+        errorLabel.setForeground(Color.RED);
         JTextField courseNameF = new JTextField();
         JTextField capacityF = new JTextField();
         String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri"};
@@ -582,60 +657,104 @@ public class UI {
         teacherAddToCoursesPanelSecondary.add(creditsL);
         teacherAddToCoursesPanelSecondary.add(creditsC);
         teacherAddToCoursesPanelSecondary.add(teacherAddCourse);
+        teacherAddToCoursesPanelSecondary.add(new JLabel());
+        teacherAddToCoursesPanelSecondary.add(errorLabel);
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.anchor = GridBagConstraints.CENTER;
         teacherAddToCoursesPanel.add(teacherAddToCoursesPanelSecondary, constraints);
-
-//        Setting the main panel as the first page
-        teacherPanel.add(teacherMainPanel, BorderLayout.CENTER);
-
-        return teacherPanel;
     }
 
     /**
      * Creates the admin panel and its different sections
-     * @return the panel it has built for further processes
      */
-    public JPanel setAdminPanel() {
+    public void setAdminPanel() {
+
+        Color colour = new Color(30, 50, 150);
+        Font barFont = new Font("", Font.PLAIN, 10);
+        TitledBorder commonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(colour, 3),
+                "Credentials", 4, 0, new Font("", Font.PLAIN, 15));
+        Font mainFont = new Font("", Font.PLAIN, 20);
 
 //        Creating the initial admin panel here
-        adminPanel = new JPanel(new BorderLayout(30, 30));
-        adminMainB = new JButton("Main panel");
-        adminChangeUNAndPW = new JButton("Change username or password");
-        adminRefectoryB = new JButton("Manage refectory");
-        adminSTB = new JButton("Manage students and teachers");
-        adminPanelExit = new JButton("Exit");
-        JPanel adminOptionsPanel = new JPanel(new GridLayout(20, 1));
-        adminOptionsPanel.add(adminMainB);
-        adminOptionsPanel.add(adminChangeUNAndPW);
-        adminOptionsPanel.add(adminRefectoryB);
-        adminOptionsPanel.add(adminSTB);
-        adminPanel.add(adminOptionsPanel, BorderLayout.WEST);
-        adminPanel.add(adminPanelExit, BorderLayout.NORTH);
+        adminPanel = new ImageJPanel("Project Files\\white-technology-2K-wallpaper.jpg");
+        adminPanel.setLayout(new BorderLayout(10, 10));
+        adminMainB = new JLabel("Main panel");
+        adminMainB.setFont(barFont);
+        adminMainB.setHorizontalAlignment(0);
+        adminMainB.setPreferredSize(new Dimension(70, 40));
+        adminMainB.setForeground(Color.WHITE);
+        adminChangeUNAndPW = new JLabel("Change username or password");
+        adminChangeUNAndPW.setFont(barFont);
+        adminChangeUNAndPW.setHorizontalAlignment(0);
+        adminChangeUNAndPW.setPreferredSize(new Dimension(150, 40));
+        adminChangeUNAndPW.setForeground(Color.WHITE);
+        adminRefectoryB = new JLabel("Manage refectory");
+        adminRefectoryB.setFont(barFont);
+        adminRefectoryB.setHorizontalAlignment(0);
+        adminRefectoryB.setPreferredSize(new Dimension(90, 40));
+        adminRefectoryB.setForeground(Color.WHITE);
+        adminSTB = new JLabel("Manage students and teachers");
+        adminSTB.setFont(barFont);
+        adminSTB.setHorizontalAlignment(0);
+        adminSTB.setPreferredSize(new Dimension(160, 40));
+        adminSTB.setForeground(Color.WHITE);
+        adminPanelExit = new JLabel("Exit");
+        adminPanelExit.setFont(barFont);
+        adminPanelExit.setHorizontalAlignment(0);
+        adminPanelExit.setPreferredSize(new Dimension(60, 40));
+        adminPanelExit.setForeground(Color.WHITE);
+        adminPanelExit.setPreferredSize(new Dimension(60, 40));
+        JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        upperPanel.setBackground(colour);
+        upperPanel.add(adminPanelExit);
+        upperPanel.add(adminMainB);
+        upperPanel.add(adminChangeUNAndPW);
+        upperPanel.add(adminRefectoryB);
+        upperPanel.add(adminSTB);
+        adminPanel.add(upperPanel, BorderLayout.NORTH);
 
-//        Creating the main panel here
+//        Setting the main panel as the first page of the initial panel
+        setAdminMainBoard(mainFont);
+        adminPanel.add(adminMainPanel, BorderLayout.CENTER);
+    }
+
+    public void setAdminMainBoard(Font mainFont) {
         adminMainPanel = new JPanel(new GridBagLayout());
+        adminMainPanel.setOpaque(false);
         JPanel adminMainPanelSecondary = new JPanel(new GridLayout(2, 2, 10, 10));
+        adminMainPanelSecondary.setOpaque(false);
         JLabel userName = new JLabel("Username:");
-        JLabel password = new JLabel("Password:");
+        userName.setFont(mainFont);
         JLabel adminUserName = new JLabel("Username");
+        adminUserName.setFont(mainFont);
+        JLabel password = new JLabel("Password:");
+        password.setFont(mainFont);
         JLabel adminPassword = new JLabel("Password");
+        adminPassword.setFont(mainFont);
         adminMainPanelSecondary.add(userName);
-        adminMainPanelSecondary.add(password);
         adminMainPanelSecondary.add(adminUserName);
+        adminMainPanelSecondary.add(password);
         adminMainPanelSecondary.add(adminPassword);
         adminMainPanel.add(adminMainPanelSecondary, constraints);
+    }
 
-//        Creating the panel for renewing password and username
+    public void setAdminUNPSPanel(Font mainFont) {
         adminUNPSPanel = new JPanel(new GridBagLayout());
+        adminUNPSPanel.setOpaque(false);
         JPanel secondary = new JPanel(new GridLayout(4, 2, 5, 5));
+        secondary.setOpaque(false);
         JLabel newUsername = new JLabel("New username");
+        newUsername.setPreferredSize(new Dimension(180, 50));
+        newUsername.setFont(mainFont);
         JLabel newPassword = new JLabel("New Password");
+        newPassword.setPreferredSize(new Dimension(180, 50));
+        newPassword.setFont(mainFont);
         JTextField newUsernameField = new JTextField();
         JPasswordField newPasswordField = new JPasswordField();
         JLabel notice = new JLabel("");
         JButton changeButton = new JButton("Change");
+        changeButton.setFont(mainFont);
         secondary.add(newUsername);
         secondary.add(newUsernameField);
         secondary.add(newPassword);
@@ -651,19 +770,35 @@ public class UI {
         constraints.gridwidth = 0;
         constraints.gridwidth = 1;
         adminUNPSPanel.add(secondary, constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 0;
+        constraints.gridheight = 0;
+    }
 
-//        Creating the panel for scheduling the refectory
+    public void setAdminRefectoryPanel(Font mainFont) {
         adminRefectoryPanel = new JPanel(new BorderLayout());
         JPanel adminRefectoryPanelSecondary = new JPanel(new GridLayout(9, 5, 20, 20));
-        JLabel Mon = new JLabel("Mon");
-        JLabel Tue = new JLabel("Tue");
-        JLabel Wed = new JLabel("Wed");
-        JLabel Thu = new JLabel("Thu");
-        JLabel Fri = new JLabel("Fri");
-        JLabel Sat = new JLabel("Sat");
-        JLabel Sun = new JLabel("Sun");
+        adminRefectoryPanel.setOpaque(false);
+        adminRefectoryPanelSecondary.setOpaque(false);
+        JLabel Mon = new JLabel("Mon", SwingConstants.CENTER);
+        Mon.setFont(mainFont);
+        JLabel Tue = new JLabel("Tue", SwingConstants.CENTER);
+        Tue.setFont(mainFont);
+        JLabel Wed = new JLabel("Wed", SwingConstants.CENTER);
+        Wed.setFont(mainFont);
+        JLabel Thu = new JLabel("Thu", SwingConstants.CENTER);
+        Thu.setFont(mainFont);
+        JLabel Fri = new JLabel("Fri", SwingConstants.CENTER);
+        Fri.setFont(mainFont);
+        JLabel Sat = new JLabel("Sat", SwingConstants.CENTER);
+        Sat.setFont(mainFont);
+        JLabel Sun = new JLabel("Sun", SwingConstants.CENTER);
+        Sun.setFont(mainFont);
         JLabel dinner = new JLabel("Dinner");
+        dinner.setFont(mainFont);
         JLabel lunch = new JLabel("Lunch");
+        lunch.setFont(mainFont);
         JTextField MonLunch = new JTextField();
         JTextField TueLunch = new JTextField();
         JTextField WedLunch = new JTextField();
@@ -693,11 +828,16 @@ public class UI {
         JTextField SatDinnerP = new JTextField();
         JTextField SunDinnerP = new JTextField();
         JButton setButton = new JButton("Set");
+        setButton.setFont(mainFont);
         adminRefectoryPanelSecondary.add(new JLabel(""));
         adminRefectoryPanelSecondary.add(lunch);
-        adminRefectoryPanelSecondary.add(new JLabel("Price"));
+        JLabel priceLabel1 = new JLabel("Price");
+        priceLabel1.setFont(mainFont);
+        adminRefectoryPanelSecondary.add(priceLabel1);
         adminRefectoryPanelSecondary.add(dinner);
-        adminRefectoryPanelSecondary.add(new JLabel("Price"));
+        JLabel priceLabel2 = new JLabel("Price");
+        priceLabel2.setFont(mainFont);
+        adminRefectoryPanelSecondary.add(priceLabel2);
         adminRefectoryPanelSecondary.add(Mon);
         adminRefectoryPanelSecondary.add(MonLunch);
         adminRefectoryPanelSecondary.add(MonLunchP);
@@ -735,8 +875,10 @@ public class UI {
         adminRefectoryPanelSecondary.add(SunDinnerP);
         adminRefectoryPanelSecondary.add(setButton);
         adminRefectoryPanel.add(adminRefectoryPanelSecondary, BorderLayout.CENTER);
+    }
 
-//        Creating panel for managing students and teachers and their courses
+    public void setAdminSTPanel() {
+
         adminSTPanel = new JPanel(new GridLayout(1, 3, 30, 30));
         JPanel studentsPanel = new JPanel(new BorderLayout());
         JLabel students = new JLabel("Students:");
@@ -774,11 +916,6 @@ public class UI {
         adminSTPanel.add(studentsPanel);
         adminSTPanel.add(teachersPanel);
         adminSTPanel.add(coursesPanel);
-
-//        Setting the main panel as the first page of the initial panel
-        adminPanel.add(adminMainPanel, BorderLayout.CENTER);
-
-        return adminPanel;
     }
 
     public class EventHandler implements ActionListener {
@@ -790,13 +927,16 @@ public class UI {
                 int entranceMode = comboBox.getSelectedIndex();
                 switch(entranceMode) {
                     case 0:
-                        frame.setContentPane(setAdminPanel());
+                        setAdminPanel();
+                        frame.setContentPane(adminPanel);
                         break;
                     case 1:
-                        frame.setContentPane(setTeacherPanel());
+                        setTeacherPanel();
+                        frame.setContentPane(teacherPanel);
                         break;
                     case 2:
-                        frame.setContentPane(setStudentPanel());
+                        setStudentPanel();
+                        frame.setContentPane(studentPanel);
                 }
             }
         }
