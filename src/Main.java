@@ -8,7 +8,7 @@ public class Main {
                     UIManager.getSystemLookAndFeelClassName());
         }
         catch (UnsupportedLookAndFeelException | IllegalAccessException | InstantiationException | ClassNotFoundException e) {
-            System.err.println(e);
+            UniversitySystem.err.println(e);
         }
         UI ui = new UI();
     }

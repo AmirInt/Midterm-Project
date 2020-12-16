@@ -180,7 +180,7 @@ public class UI {
         studentPanel = new ImageJPanel("Project Files\\istockphoto-610850338-1024x1024 2.jpg");
         studentPanel.setLayout(new BorderLayout(30, 30));
         studentMainB = new JLabel("Main Panel");
-        studentMainB.setPreferredSize(new Dimension(70, 40));
+        studentMainB.setPreferredSize(new Dimension(90, 40));
         studentMainB.setHorizontalAlignment(0);
         studentMainB.setFont(barFont);
         studentMainB.setForeground(Color.WHITE);
@@ -192,25 +192,25 @@ public class UI {
         changeUNAndPW.setForeground(Color.WHITE);
         changeUNAndPW.addMouseListener(mouseHandler);
         purchaseBalance = new JLabel("Purchase balance");
-        purchaseBalance.setPreferredSize(new Dimension(120, 40));
+        purchaseBalance.setPreferredSize(new Dimension(130, 40));
         purchaseBalance.setHorizontalAlignment(0);
         purchaseBalance.setFont(barFont);
         purchaseBalance.setForeground(Color.WHITE);
         purchaseBalance.addMouseListener(mouseHandler);
         reserve = new JLabel("Reserve food");
-        reserve.setPreferredSize(new Dimension(80, 40));
+        reserve.setPreferredSize(new Dimension(90, 40));
         reserve.setHorizontalAlignment(0);
         reserve.setFont(barFont);
         reserve.setForeground(Color.WHITE);
         reserve.addMouseListener(mouseHandler);
         selectCredits = new JLabel("Select new credits");
-        selectCredits.setPreferredSize(new Dimension(130, 40));
+        selectCredits.setPreferredSize(new Dimension(140, 40));
         selectCredits.setHorizontalAlignment(0);
         selectCredits.setFont(barFont);
         selectCredits.setForeground(Color.WHITE);
         selectCredits.addMouseListener(mouseHandler);
         studentPanelExit = new JLabel("Exit");
-        studentPanelExit.setPreferredSize(new Dimension(40, 40));
+        studentPanelExit.setPreferredSize(new Dimension(50, 40));
         studentPanelExit.setHorizontalAlignment(0);
         studentPanelExit.setFont(barFont);
         studentPanelExit.setForeground(Color.WHITE);
@@ -1059,7 +1059,6 @@ public class UI {
 
             if(interactedLabel.equals(studentPanelExit) || interactedLabel.equals(teacherPanelExit)
                 || interactedLabel.equals(adminPanelExit)) {
-                System.out.println(0);
                 setLoginPanel();
                 frame.setContentPane(loginPanel);
             }
