@@ -1,6 +1,6 @@
 public class Teacher extends Member {
 
-    public Teacher(String userName, String password) {
+    public Teacher(String userName, char[] password) {
         super(userName, password);
     }
 
@@ -10,7 +10,7 @@ public class Teacher extends Member {
     }
 
     @Override
-    public void setPassword(String password) {
+    public void setPassword(char[] password) {
         super.setPassword(password);
     }
 
@@ -20,7 +20,17 @@ public class Teacher extends Member {
     }
 
     @Override
-    public String getPassword() {
+    public char[] getPassword() {
         return super.getPassword();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

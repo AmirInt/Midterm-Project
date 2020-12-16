@@ -2,18 +2,18 @@ public class Administrator extends Member {
 
     private static Administrator administrator = null;
 
-    private Administrator(String userName, String passWord) {
+    private Administrator(String userName, char[] passWord) {
         super(userName, passWord);
     }
 
-    public static Administrator getInstance(String userName, String passWord) {
+    public static Administrator getInstance(String userName, char[] passWord) {
         if(administrator == null)
             administrator = new Administrator(userName, passWord);
         return administrator;
     }
 
     @Override
-    public void setPassword(String password) {
+    public void setPassword(char[] password) {
         super.setPassword(password);
     }
 
@@ -23,7 +23,7 @@ public class Administrator extends Member {
     }
 
     @Override
-    public String getPassword() {
+    public char[] getPassword() {
         return super.getPassword();
     }
 

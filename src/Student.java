@@ -3,14 +3,14 @@ public class Student extends Member {
     private float average;
     private int credits;
 
-    public Student(String userName, String password) {
+    public Student(String userName, char[] password) {
         super(userName, password);
         average = 0;
         credits = 0;
     }
 
     @Override
-    public void setPassword(String password) {
+    public void setPassword(char[] password) {
         super.setPassword(password);
     }
 
@@ -29,7 +29,7 @@ public class Student extends Member {
     }
 
     @Override
-    public String getPassword() {
+    public char[] getPassword() {
         return super.getPassword();
     }
 
@@ -44,5 +44,15 @@ public class Student extends Member {
 
     public int getCredits() {
         return credits;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }

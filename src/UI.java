@@ -2,6 +2,8 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Class UI is responsible for creating the graphical user interface
@@ -10,79 +12,130 @@ import java.awt.event.*;
  */
 public class UI {
 
-    JFrame frame;
-    Color studentColour;
-    Color teacherColour;
-    Color adminColour;
-    Font barFont;
-    TitledBorder studentCommonBorder;
-    TitledBorder teacherCommonBorder;
-    TitledBorder adminCommonBorder;
-    Font mainFont;
+    private Administrator administrator;
+    private ArrayList<Student> students;
+    private ArrayList<Teacher> teachers;
+    private ArrayList<Course> courses;
+    private ArrayList<String> refectorySchedule;
+    private ArrayList<Float> refectoryPrices;
+    private Member workingMember;
 
-//    loginPanel accessories
-    JPanel loginPanel;
-    JComboBox<String> comboBox;
-    JPanel loginBoard;
-    JPanel creditsBoard;
-    JLabel informLabel, errorLabel;
-    JTextField usernameField;
-    JPasswordField passwordField;
-    JButton enterButton;
+    private JFrame frame;
+    private Color studentColour;
+    private Color teacherColour;
+    private Color adminColour;
+    private Font barFont;
+    private TitledBorder studentCommonBorder;
+    private TitledBorder teacherCommonBorder;
+    private TitledBorder adminCommonBorder;
+    private Font mainFont;
+    private JTextField newUsernameField;
+    private JPasswordField newPasswordField;
+    private JPasswordField repeatPasswordField;
+    private JLabel newUsername;
+    private JLabel newPassword;
+    private JLabel repeatPassword;
+    private JButton changeButton;
+    private JButton setButton;
+    private JLabel successLabel;
+    private JButton addTeacherB;
+    private JButton removeTeacherB;
+    private JButton addStudentB;
+    private JButton removeStudentB;
+    private JButton addCourseB;
+    private JButton removeCourseB;
+
+
+    //    loginPanel accessories
+    private JPanel loginPanel;
+    private JComboBox<String> comboBox;
+    private JLabel errorLabel;
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private JButton enterButton;
 
     //    studentPanel accessories
-    JPanel studentPanel;
-    JPanel studentMainPanel;
-    JLabel studentMainB;
-    JLabel changeUNAndPW;
-    JLabel purchaseBalance;
-    JLabel reserve;
-    JLabel selectCredits;
-    JLabel studentPanelExit;
-    JPanel UNPSPanel;
-    JPanel balancePanel;
-    JPanel reservationPanel;
-    JPanel creditSelectionPanel;
+    private JPanel studentPanel;
+    private JPanel studentMainPanel;
+    private JLabel studentMainB;
+    private JLabel changeUNAndPW;
+    private JLabel purchaseBalance;
+    private JLabel reserve;
+    private JLabel selectCredits;
+    private JLabel studentPanelExit;
+    private JPanel UNPSPanel;
+    private JPanel balancePanel;
+    private JPanel reservationPanel;
+    private JPanel creditSelectionPanel;
 
     //    teacherPanel accessories
-    JPanel teacherPanel;
-    JPanel teacherMainPanel;
-    JPanel teacherUNPSPanel;
-    JPanel teacherAddToCoursesPanel;
-    JLabel teacherMainB;
-    JLabel teacherChangeUNAndPW;
-    JLabel teacherPanelExit;
-    JLabel teacherAddToCoursesB;
+    private JPanel teacherPanel;
+    private JPanel teacherMainPanel;
+    private JPanel teacherUNPSPanel;
+    private JPanel teacherAddToCoursesPanel;
+    private JLabel teacherMainB;
+    private JLabel teacherChangeUNAndPW;
+    private JLabel teacherPanelExit;
+    private JLabel teacherAddToCoursesB;
 
     //    adminPanel accessories
-    JPanel adminPanel;
-    JPanel adminMainPanel;
-    JPanel adminUNPSPanel;
-    JPanel adminRefectoryPanel;
-    JPanel adminSTPanel;
-    JLabel adminMainB;
-    JLabel adminChangeUNAndPW;
-    JLabel adminRefectoryB;
-    JLabel adminSTB;
-    JLabel adminPanelExit;
+    private JPanel adminPanel;
+    private JPanel adminMainPanel;
+    private JPanel adminUNPSPanel;
+    private JPanel adminRefectoryPanel;
+    private JPanel adminSTPanel;
+    private JLabel adminMainB;
+    private JLabel adminChangeUNAndPW;
+    private JLabel adminRefectoryB;
+    private JLabel adminSTB;
+    private JLabel adminPanelExit;
 
-//    constraints variable is for managing the items of the GridBagLayout
+    private JTextField MonLunch;
+    private JTextField TueLunch;
+    private JTextField WedLunch;
+    private JTextField ThuLunch;
+    private JTextField FriLunch;
+    private JTextField SatLunch;
+    private JTextField SunLunch ;
+    private JTextField MonDinner;
+    private JTextField TueDinner;
+    private JTextField WedDinner;
+    private JTextField ThuDinner;
+    private JTextField FriDinner;
+    private JTextField SatDinner;
+    private JTextField SunDinner;
+    private JTextField MonLunchP;
+    private JTextField TueLunchP;
+    private JTextField WedLunchP;
+    private JTextField ThuLunchP;
+    private JTextField FriLunchP;
+    private JTextField SatLunchP;
+    private JTextField SunLunchP;
+    private JTextField MonDinnerP;
+    private JTextField TueDinnerP;
+    private JTextField WedDinnerP;
+    private JTextField ThuDinnerP;
+    private JTextField FriDinnerP;
+    private JTextField SatDinnerP;
+    private JTextField SunDinnerP;
+
+
+    //    constraints variable is for managing the items of the GridBagLayout
 //    wherever its needed
-    GridBagConstraints constraints = new GridBagConstraints();
+    private GridBagConstraints constraints = new GridBagConstraints();
 
     /**
      * Instantiates this class
      */
-    public UI() {
-
-//        Setting the frame
-        frame = new JFrame("University Management System");
-        frame.setSize(740, 560);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setLoginPanel();
-        frame.setContentPane(loginPanel);
-        frame.setVisible(true);
+    public UI(Administrator administrator, ArrayList<Student> students, ArrayList<Teacher> teachers,
+              ArrayList<Course> courses, ArrayList<String> refectorySchedule, ArrayList<Float> refectoryPrices) {
+//        Getting the system members and attributes
+        this.administrator = administrator;
+        this.students = students;
+        this.teachers = teachers;
+        this.courses = courses;
+        this.refectorySchedule = refectorySchedule;
+        this.refectoryPrices = refectoryPrices;
 
 //        Setting some common attributes in the programme
         studentColour = new Color(30, 90, 20);
@@ -96,6 +149,73 @@ public class UI {
         adminCommonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(adminColour, 3),
                 "Credentials", 4, 0, barFont);
         mainFont = new Font("", Font.PLAIN, 20);
+
+        newUsernameField = new JTextField();
+        newUsernameField.setFont(mainFont);
+        newPasswordField = new JPasswordField();
+        repeatPasswordField = new JPasswordField();
+        newUsername = new JLabel("New username");
+        newUsername.setPreferredSize(new Dimension(180, 50));
+        newUsername.setFont(mainFont);
+        newPassword = new JLabel("New Password");
+        newPassword.setPreferredSize(new Dimension(180, 50));
+        newPassword.setFont(mainFont);
+        repeatPassword = new JLabel("Repeat Password");
+        newPassword.setPreferredSize(new Dimension(180, 50));
+        repeatPassword.setFont(mainFont);
+        changeButton = new JButton("Change");
+        changeButton.setFont(mainFont);
+        setButton = new JButton("Set");
+        setButton.setFont(mainFont);
+        errorLabel = new JLabel();
+        errorLabel.setForeground(Color.RED);
+        successLabel = new JLabel();
+        successLabel.setForeground(Color.GREEN);
+        addStudentB = new JButton("Add");
+        removeStudentB = new JButton("Remove");
+        addTeacherB = new JButton("Add");
+        removeTeacherB = new JButton("Remove");
+        addCourseB = new JButton("Add");
+        removeCourseB = new JButton("Remove");
+
+
+        MonLunch = new JTextField();
+        TueLunch = new JTextField();
+        WedLunch = new JTextField();
+        ThuLunch = new JTextField();
+        FriLunch = new JTextField();
+        SatLunch = new JTextField();
+        SunLunch = new JTextField();
+        MonDinner = new JTextField();
+        TueDinner = new JTextField();
+        WedDinner = new JTextField();
+        ThuDinner = new JTextField();
+        FriDinner = new JTextField();
+        SatDinner = new JTextField();
+        SunDinner = new JTextField();
+        MonLunchP = new JTextField();
+        TueLunchP = new JTextField();
+        WedLunchP = new JTextField();
+        ThuLunchP = new JTextField();
+        FriLunchP = new JTextField();
+        SatLunchP = new JTextField();
+        SunLunchP = new JTextField();
+        MonDinnerP = new JTextField();
+        TueDinnerP = new JTextField();
+        WedDinnerP = new JTextField();
+        ThuDinnerP = new JTextField();
+        FriDinnerP = new JTextField();
+        SatDinnerP = new JTextField();
+        SunDinnerP = new JTextField();
+
+//        Setting the frame
+        frame = new JFrame("University Management System");
+        frame.setSize(740, 560);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLoginPanel();
+        frame.setContentPane(loginPanel);
+        frame.setVisible(true);
 
     }
 
@@ -120,30 +240,38 @@ public class UI {
         introPanel.add(comboBox);
         introPanel.setBackground(new Color(30, 50, 150));
 
-        creditsBoard = new JPanel();
-        creditsBoard.setLayout(new GridLayout(2, 1, 5,5));
-        usernameField = new JTextField("Username");
+        JPanel creditsBoard = new JPanel();
+        creditsBoard.setLayout(new GridLayout(2, 2, 5,5));
+        usernameField = new JTextField();
         usernameField.addActionListener(eventHandler);
         usernameField.setPreferredSize(new Dimension(80, 25));
-        passwordField = new JPasswordField("Password");
+        passwordField = new JPasswordField();
         passwordField.addActionListener(eventHandler);
         passwordField.setPreferredSize(new Dimension(80, 25));
+        JLabel usernameL = new JLabel("Username");
+        usernameL.setForeground(Color.WHITE);
+        usernameL.setFont(mainFont);
+        JLabel passwordL = new JLabel("Password");
+        passwordL.setForeground(Color.WHITE);
+        passwordL.setFont(mainFont);
+        creditsBoard.add(usernameL);
         creditsBoard.add(usernameField);
+        creditsBoard.add(passwordL);
         creditsBoard.add(passwordField);
         creditsBoard.setOpaque(false);
-        informLabel = new JLabel("Enter ye' username and password");
+        JLabel informLabel = new JLabel("Enter ye' username and password");
         informLabel.setPreferredSize(new Dimension(350, 50));
         informLabel.setForeground(Color.WHITE);
         informLabel.setFont(new Font("", Font.PLAIN, 20));
         informLabel.setHorizontalAlignment(0);
-        errorLabel = new JLabel("");
+        errorLabel.setText("");
         enterButton = new JButton("Enter");
         enterButton.setPreferredSize(new Dimension(200, 40));
         enterButton.setForeground(new Color(0, 0, 100));
         enterButton.setFont(new Font("", Font.PLAIN, 20));
         enterButton.addActionListener(eventHandler);
         enterButton.setOpaque(false);
-        loginBoard = new JPanel(new BorderLayout(5, 5));
+        JPanel loginBoard = new JPanel(new BorderLayout(5, 5));
         loginBoard.add(informLabel, BorderLayout.NORTH);
         loginBoard.add(creditsBoard, BorderLayout.CENTER);
         loginBoard.add(errorLabel, BorderLayout.SOUTH);
@@ -162,7 +290,7 @@ public class UI {
         secondaryPanel.add(enterButton, constraints);
         constraints.gridy = 0;
         loginPanel.add(secondaryPanel, BorderLayout.CENTER);
-
+//        Resetting constraints
         constraints.gridy = 0;
         constraints.gridx = 0;
 
@@ -295,28 +423,18 @@ public class UI {
      */
     public void setStudentUNPSPanel() {
 
+        EventHandler eventHandler = new EventHandler();
+
         UNPSPanel = new JPanel(new GridBagLayout());
         UNPSPanel.setOpaque(false);
+        newUsernameField.addActionListener(eventHandler);
+        newPasswordField.addActionListener(eventHandler);
+        repeatPasswordField.addActionListener(eventHandler);
+        changeButton.addActionListener(eventHandler);
+        errorLabel.setText("");
+        successLabel.setText("");
         JPanel secondary = new JPanel(new GridLayout(5, 2, 5, 5));
         secondary.setOpaque(false);
-        JLabel newUsername = new JLabel("New username");
-        newUsername.setPreferredSize(new Dimension(180, 50));
-        newUsername.setFont(mainFont);
-        JLabel newPassword = new JLabel("New Password");
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        newPassword.setFont(mainFont);
-        JLabel repeatPassword = new JLabel("Repeat Password");
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        repeatPassword.setFont(mainFont);
-        JTextField newUsernameField = new JTextField();
-        newUsernameField.setFont(mainFont);
-        JPasswordField newPasswordField = new JPasswordField();
-        newPasswordField.setFont(mainFont);
-        JPasswordField repeatPasswordField = new JPasswordField();
-        newPasswordField.setFont(mainFont);
-        JLabel notice = new JLabel("");
-        JButton changeButton = new JButton("Change");
-        changeButton.setFont(mainFont);
         secondary.add(newUsername);
         secondary.add(newUsernameField);
         secondary.add(newPassword);
@@ -325,7 +443,8 @@ public class UI {
         secondary.add(repeatPasswordField);
         secondary.add(changeButton);
         secondary.add(new JLabel());
-        secondary.add(notice);
+        secondary.add(errorLabel);
+        secondary.add(successLabel);
         UNPSPanel.add(secondary, constraints);
 
     }
@@ -343,10 +462,12 @@ public class UI {
         cardNumberL.setPreferredSize(new Dimension(180, 50));
         cardNumberL.setFont(mainFont);
         JTextField cardNumberT = new JTextField();
+        cardNumberT.setFont(mainFont);
         JLabel balanceL = new JLabel("Balance: ");
         balanceL.setPreferredSize(new Dimension(180, 50));
         balanceL.setFont(mainFont);
         JTextField balanceT = new JTextField();
+        balanceT.setFont(mainFont);
         JLabel passwordL = new JLabel("Password: ");
         passwordL.setPreferredSize(new Dimension(180, 50));
         passwordL.setFont(mainFont);
@@ -391,20 +512,34 @@ public class UI {
         dinner.setFont(mainFont);
         JLabel lunch = new JLabel("Lunch");
         lunch.setFont(mainFont);
-        JLabel MonLunch = new JLabel();
-        JLabel TueLunch = new JLabel();
-        JLabel WedLunch = new JLabel();
-        JLabel ThuLunch = new JLabel();
-        JLabel FriLunch = new JLabel();
-        JLabel SatLunch = new JLabel();
-        JLabel SunLunch = new JLabel();
-        JLabel MonDinner = new JLabel();
-        JLabel TueDinner = new JLabel();
-        JLabel WedDinner = new JLabel();
-        JLabel ThuDinner = new JLabel();
-        JLabel FriDinner = new JLabel();
-        JLabel SatDinner = new JLabel();
-        JLabel SunDinner = new JLabel();
+        JLabel MonLunch = new JLabel(refectorySchedule.get(0));
+        MonLunch.setToolTipText(refectoryPrices.get(0).toString());
+        JLabel TueLunch = new JLabel(refectorySchedule.get(2));
+        TueLunch.setToolTipText(refectoryPrices.get(2).toString());
+        JLabel WedLunch = new JLabel(refectorySchedule.get(4));
+        WedLunch.setToolTipText(refectoryPrices.get(4).toString());
+        JLabel ThuLunch = new JLabel(refectorySchedule.get(6));
+        ThuLunch.setToolTipText(refectoryPrices.get(6).toString());
+        JLabel FriLunch = new JLabel(refectorySchedule.get(8));
+        FriLunch.setToolTipText(refectoryPrices.get(8).toString());
+        JLabel SatLunch = new JLabel(refectorySchedule.get(10));
+        SatLunch.setToolTipText(refectoryPrices.get(10).toString());
+        JLabel SunLunch = new JLabel(refectorySchedule.get(12));
+        SunLunch.setToolTipText(refectoryPrices.get(12).toString());
+        JLabel MonDinner = new JLabel(refectorySchedule.get(1));
+        MonDinner.setToolTipText(refectoryPrices.get(1).toString());
+        JLabel TueDinner = new JLabel(refectorySchedule.get(3));
+        TueDinner.setToolTipText(refectoryPrices.get(3).toString());
+        JLabel WedDinner = new JLabel(refectorySchedule.get(5));
+        WedDinner.setToolTipText(refectoryPrices.get(5).toString());
+        JLabel ThuDinner = new JLabel(refectorySchedule.get(7));
+        ThuDinner.setToolTipText(refectoryPrices.get(7).toString());
+        JLabel FriDinner = new JLabel(refectorySchedule.get(9));
+        FriDinner.setToolTipText(refectoryPrices.get(9).toString());
+        JLabel SatDinner = new JLabel(refectorySchedule.get(11));
+        SatDinner.setToolTipText(refectoryPrices.get(11).toString());
+        JLabel SunDinner = new JLabel(refectorySchedule.get(13));
+        SunDinner.setToolTipText(refectoryPrices.get(13).toString());
         JCheckBox MonLunchCh = new JCheckBox();
         MonLunchCh.setOpaque(false);
         JCheckBox TueLunchCh = new JCheckBox();
@@ -641,25 +776,18 @@ public class UI {
      */
     public void setTeacherUNPSPanel() {
 
+        EventHandler eventHandler = new EventHandler();
+
         teacherUNPSPanel = new JPanel(new GridBagLayout());
         teacherUNPSPanel.setOpaque(false);
+        newUsernameField.addActionListener(eventHandler);
+        newPasswordField.addActionListener(eventHandler);
+        repeatPasswordField.addActionListener(eventHandler);
+        changeButton.addActionListener(eventHandler);
+        errorLabel.setText("");
+        successLabel.setText("");
         JPanel secondary = new JPanel(new GridLayout(5, 2, 5, 5));
         secondary.setOpaque(false);
-        JLabel newUsername = new JLabel("New username");
-        newUsername.setPreferredSize(new Dimension(180, 50));
-        newUsername.setFont(mainFont);
-        JLabel newPassword = new JLabel("New Password");
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        newPassword.setFont(mainFont);
-        JLabel repeatPassword = new JLabel("Repeat Password");
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        repeatPassword.setFont(mainFont);
-        JTextField newUsernameField = new JTextField();
-        JPasswordField newPasswordField = new JPasswordField();
-        JPasswordField repeatPasswordField = new JPasswordField();
-        JLabel notice = new JLabel("");
-        JButton changeButton = new JButton("Change");
-        changeButton.setFont(mainFont);
         secondary.add(newUsername);
         secondary.add(newUsernameField);
         secondary.add(newPassword);
@@ -668,7 +796,8 @@ public class UI {
         secondary.add(repeatPasswordField);
         secondary.add(changeButton);
         secondary.add(new JLabel());
-        secondary.add(notice);
+        secondary.add(errorLabel);
+        secondary.add(successLabel);
         teacherUNPSPanel.add(secondary, constraints);
 
     }
@@ -699,23 +828,23 @@ public class UI {
         capacityL.setFont(mainFont);
         JLabel errorLabel = new JLabel("");
         errorLabel.setForeground(Color.RED);
-        JTextField courseNameF = new JTextField();
-        courseNameF.setFont(mainFont);
+        JComboBox<Subjects> courseNameC = new JComboBox<>(Subjects.values());
+        courseNameC.setFont(mainFont);
         JTextField capacityF = new JTextField();
         capacityF.setFont(mainFont);
-        String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri"};
-        String[] times = {"8 - 10", "10 - 12", "14 - 16"};
+//        String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri"};
+//        String[] times = {"8 - 10", "10 - 12", "14 - 16"};
         String[] credits = {"1", "2", "3", "4"};
-        JComboBox<String> daysC = new JComboBox<>(days);
+        JComboBox<Days> daysC = new JComboBox<>(Days.values());
         daysC.setFont(mainFont);
-        JComboBox<String> timesC = new JComboBox<>(times);
+        JComboBox<Times> timesC = new JComboBox<>(Times.values());
         timesC.setFont(mainFont);
         JComboBox<String> creditsC = new JComboBox<>(credits);
         creditsC.setFont(mainFont);
         JButton teacherAddCourse = new JButton("Add");
         teacherAddCourse.setFont(mainFont);
         teacherAddToCoursesPanelSecondary.add(courseNameL);
-        teacherAddToCoursesPanelSecondary.add(courseNameF);
+        teacherAddToCoursesPanelSecondary.add(courseNameC);
         teacherAddToCoursesPanelSecondary.add(capacityL);
         teacherAddToCoursesPanelSecondary.add(capacityF);
         teacherAddToCoursesPanelSecondary.add(dayL);
@@ -793,11 +922,11 @@ public class UI {
         adminMainPanelSecondary.setOpaque(false);
         JLabel userName = new JLabel("Username:");
         userName.setFont(mainFont);
-        JLabel adminUserName = new JLabel("Username");
+        JLabel adminUserName = new JLabel(administrator.getUserName());
         adminUserName.setFont(mainFont);
         JLabel password = new JLabel("Password:");
         password.setFont(mainFont);
-        JLabel adminPassword = new JLabel("Password");
+        JLabel adminPassword = new JLabel(Arrays.toString(administrator.getPassword()));
         adminPassword.setFont(mainFont);
         adminMainPanelSecondary.add(userName);
         adminMainPanelSecondary.add(adminUserName);
@@ -812,25 +941,18 @@ public class UI {
      */
     public void setAdminUNPSPanel() {
 
+        EventHandler eventHandler = new EventHandler();
+
         adminUNPSPanel = new JPanel(new GridBagLayout());
         adminUNPSPanel.setOpaque(false);
+        newUsernameField.addActionListener(eventHandler);
+        newPasswordField.addActionListener(eventHandler);
+        repeatPasswordField.addActionListener(eventHandler);
+        changeButton.addActionListener(eventHandler);
+        errorLabel.setText("");
+        successLabel.setText("");
         JPanel secondary = new JPanel(new GridLayout(5, 2, 5, 5));
         secondary.setOpaque(false);
-        JLabel newUsername = new JLabel("New username");
-        newUsername.setPreferredSize(new Dimension(180, 50));
-        newUsername.setFont(mainFont);
-        JLabel newPassword = new JLabel("New Password");
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        newPassword.setFont(mainFont);
-        JLabel repeatPassword = new JLabel("Repeat Password");
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        repeatPassword.setFont(mainFont);
-        JTextField newUsernameField = new JTextField();
-        JPasswordField newPasswordField = new JPasswordField();
-        JPasswordField repeatPasswordField = new JPasswordField();
-        JLabel notice = new JLabel("");
-        JButton changeButton = new JButton("Change");
-        changeButton.setFont(mainFont);
         secondary.add(newUsername);
         secondary.add(newUsernameField);
         secondary.add(newPassword);
@@ -839,7 +961,8 @@ public class UI {
         secondary.add(repeatPasswordField);
         secondary.add(changeButton);
         secondary.add(new JLabel());
-        secondary.add(notice);
+        secondary.add(errorLabel);
+        secondary.add(successLabel);
         adminUNPSPanel.add(secondary, constraints);
 
     }
@@ -848,6 +971,8 @@ public class UI {
      * Creates the admin refectory management panel
      */
     public void setAdminRefectoryPanel() {
+
+        EventHandler eventHandler = new EventHandler();
 
         adminRefectoryPanel = new JPanel(new BorderLayout());
         JPanel adminRefectoryPanelSecondary = new JPanel(new GridLayout(9, 5, 20, 20));
@@ -871,36 +996,7 @@ public class UI {
         dinner.setFont(mainFont);
         JLabel lunch = new JLabel("Lunch");
         lunch.setFont(mainFont);
-        JTextField MonLunch = new JTextField();
-        JTextField TueLunch = new JTextField();
-        JTextField WedLunch = new JTextField();
-        JTextField ThuLunch = new JTextField();
-        JTextField FriLunch = new JTextField();
-        JTextField SatLunch = new JTextField();
-        JTextField SunLunch = new JTextField();
-        JTextField MonDinner = new JTextField();
-        JTextField TueDinner = new JTextField();
-        JTextField WedDinner = new JTextField();
-        JTextField ThuDinner = new JTextField();
-        JTextField FriDinner = new JTextField();
-        JTextField SatDinner = new JTextField();
-        JTextField SunDinner = new JTextField();
-        JTextField MonLunchP = new JTextField();
-        JTextField TueLunchP = new JTextField();
-        JTextField WedLunchP = new JTextField();
-        JTextField ThuLunchP = new JTextField();
-        JTextField FriLunchP = new JTextField();
-        JTextField SatLunchP = new JTextField();
-        JTextField SunLunchP = new JTextField();
-        JTextField MonDinnerP = new JTextField();
-        JTextField TueDinnerP = new JTextField();
-        JTextField WedDinnerP = new JTextField();
-        JTextField ThuDinnerP = new JTextField();
-        JTextField FriDinnerP = new JTextField();
-        JTextField SatDinnerP = new JTextField();
-        JTextField SunDinnerP = new JTextField();
-        JButton setButton = new JButton("Set");
-        setButton.setFont(mainFont);
+        setButton.addActionListener(eventHandler);
         adminRefectoryPanelSecondary.add(new JLabel(""));
         adminRefectoryPanelSecondary.add(lunch);
         JLabel priceLabel1 = new JLabel("Price");
@@ -946,6 +1042,10 @@ public class UI {
         adminRefectoryPanelSecondary.add(SunDinner);
         adminRefectoryPanelSecondary.add(SunDinnerP);
         adminRefectoryPanelSecondary.add(setButton);
+        errorLabel.setText("");
+        successLabel.setText("");
+        adminRefectoryPanelSecondary.add(errorLabel);
+        adminRefectoryPanelSecondary.add(successLabel);
         adminRefectoryPanel.add(adminRefectoryPanelSecondary, BorderLayout.CENTER);
 
     }
@@ -959,7 +1059,7 @@ public class UI {
         adminSTPanel.setOpaque(false);
         JPanel studentsPanel = new JPanel(new BorderLayout());
         studentsPanel.setOpaque(false);
-        JList<Object> studentsList = new JList<>();
+        JList<Student> studentsList = new JList<>(students.toArray(new Student[0]));
         studentsList.setOpaque(false);
         TitledBorder border1 = new TitledBorder(adminCommonBorder);
         border1.setTitle("Students");
@@ -967,15 +1067,13 @@ public class UI {
         studentsList.setBorder(border1);
         JPanel addRemovePanel = new JPanel(new FlowLayout());
         addRemovePanel.setOpaque(false);
-        JButton addStudentB = new JButton("Add");
-        JButton removeStudentB = new JButton("Remove");
         addRemovePanel.add(addStudentB);
         addRemovePanel.add(removeStudentB);
         studentsPanel.add(studentsList, BorderLayout.CENTER);
         studentsPanel.add(addRemovePanel, BorderLayout.SOUTH);
         JPanel teachersPanel = new JPanel(new BorderLayout());
         teachersPanel.setOpaque(false);
-        JList<Object> teachersList = new JList<>();
+        JList<Teacher> teachersList = new JList<>(teachers.toArray(new Teacher[0]));
         teachersList.setOpaque(false);
         TitledBorder border2 = new TitledBorder(adminCommonBorder);
         border2.setTitleFont(mainFont);
@@ -983,15 +1081,13 @@ public class UI {
         teachersList.setBorder(border2);
         JPanel addRemovePanel2 = new JPanel(new FlowLayout());
         addRemovePanel2.setOpaque(false);
-        JButton addTeacherB = new JButton("Add");
-        JButton removeTeacherB = new JButton("Remove");
         addRemovePanel2.add(addTeacherB);
         addRemovePanel2.add(removeTeacherB);
         teachersPanel.add(teachersList, BorderLayout.CENTER);
         teachersPanel.add(addRemovePanel2, BorderLayout.SOUTH);
         JPanel coursesPanel = new JPanel(new BorderLayout());
         coursesPanel.setOpaque(false);
-        JList<Object> coursesList = new JList<>();
+        JList<Course> coursesList = new JList<>(courses.toArray(new Course[0]));
         coursesList.setOpaque(false);
         TitledBorder border3 = new TitledBorder(adminCommonBorder);
         border3.setTitle("Courses");
@@ -999,8 +1095,6 @@ public class UI {
         coursesList.setBorder(border3);
         JPanel addRemovePanel3 = new JPanel(new FlowLayout());
         addRemovePanel3.setOpaque(false);
-        JButton addCourseB = new JButton("Add");
-        JButton removeCourseB = new JButton("Remove");
         addRemovePanel3.add(addCourseB);
         addRemovePanel3.add(removeCourseB);
         coursesPanel.add(coursesList, BorderLayout.CENTER);
@@ -1018,37 +1112,168 @@ public class UI {
             if(e.getSource().equals(usernameField) || e.getSource().equals(passwordField)
                 || e.getSource().equals(enterButton)) {
                 int entranceMode = comboBox.getSelectedIndex();
-                switch(entranceMode) {
+                switch (entranceMode) {
                     case 0:
-                        setAdminPanel();
-                        setAdminMainBoard();
-                        adminPanel.add(adminMainPanel, BorderLayout.CENTER);
-                        frame.setContentPane(adminPanel);
+                        workingMember = administrator;
+                        if (workingMember.getUserName().equals(usernameField.getText())
+                                && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
+                            errorLabel.setText("");
+                            setAdminPanel();
+                            setAdminMainBoard();
+                            adminPanel.add(adminMainPanel, BorderLayout.CENTER);
+                            frame.setContentPane(adminPanel);
+                        } else errorLabel.setText("Invalid username or password");
                         break;
                     case 1:
-                        setTeacherPanel();
-                        setTeacherMainBoard();
-                        teacherPanel.add(teacherMainPanel, BorderLayout.CENTER);
-                        frame.setContentPane(teacherPanel);
+                        Teacher member = new Teacher(usernameField.getText(), new char[0]);
+                        for (Teacher teacher :
+                                teachers) {
+                            if (teacher.equals(member)) {
+                                workingMember = teacher;
+                                break;
+                            }
+                        }
+                        if (workingMember != null && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
+                            errorLabel.setText("");
+                            setTeacherPanel();
+                            setTeacherMainBoard();
+                            teacherPanel.add(teacherMainPanel, BorderLayout.CENTER);
+                            frame.setContentPane(teacherPanel);
+                        } else errorLabel.setText("Invalid username or password");
                         break;
                     case 2:
-                        setStudentPanel();
-                        setStudentMainBoard();
-                        studentPanel.add(studentMainPanel, BorderLayout.CENTER);
-                        frame.setContentPane(studentPanel);
+                        Student current = new Student(usernameField.getText(), new char[0]);
+                        for (Student student :
+                                students) {
+                            if (student.equals(current)) {
+                                workingMember = student;
+                                break;
+                            }
+                        }
+                        if (workingMember != null && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
+                            errorLabel.setText("");
+                            setStudentPanel();
+                            setStudentMainBoard();
+                            studentPanel.add(studentMainPanel, BorderLayout.CENTER);
+                            frame.setContentPane(studentPanel);
+                        } else errorLabel.setText("Invalid username or password");
                 }
+            } else if(e.getSource().equals(newUsernameField) || e.getSource().equals(newPasswordField)
+                || e.getSource().equals(repeatPasswordField) || e.getSource().equals(changeButton)) {
+                String newUsername = newUsernameField.getText();
+                char[] newPassword = newPasswordField.getPassword();
+                System.out.println(newPassword);
+                if(!newUsername.equals("")) {
+                    if (workingMember instanceof Student)
+                        for (Student student :
+                                students) {
+                            if (student.getUserName().equals(newUsername) && student != workingMember) {
+                                errorLabel.setText("Username already in use");
+                                frame.revalidate();
+                                return;
+                            }
+                        }
+                    else if (workingMember instanceof Teacher) {
+                        for (Teacher teacher :
+                                teachers) {
+                            if (teacher.getUserName().equals(newUsername) && teacher != workingMember) {
+                                errorLabel.setText("Username already in use");
+                                frame.revalidate();
+                                return;
+                            }
+                        }
+                    }
+                }
+                if(newPassword.length < 8) {
+                    System.out.println(newPassword.length);
+                    errorLabel.setText("Password not long enough");
+                    successLabel.setText("");
+                }
+                else if(!isPasswordCorrect(newPassword, repeatPasswordField.getPassword())) {
+                    errorLabel.setText("Password entries do not match");
+                    successLabel.setText("");
+                }
+                else if(isPasswordCorrect(workingMember.getPassword(), newPassword)) {
+                    errorLabel.setText("New password matches the previous one");
+                    successLabel.setText("");
+                }
+                else {
+                    if(!newUsername.equals(""))
+                        workingMember.setUserName(newUsername);
+                    workingMember.setPassword(newPassword);
+                    errorLabel.setText("");
+                    successLabel.setText("Successfully set");
+                }
+                newUsernameField.setText("");
+                newPasswordField.setText("");
+                repeatPasswordField.setText("");
             }
-            else if (e.getSource().equals(studentPanelExit) ||
-            e.getSource().equals(teacherPanelExit) || e.getSource().equals(adminPanelExit)) {
-                setLoginPanel();
-                frame.setContentPane(loginPanel);
+            else if(e.getSource().equals(setButton)) {
+
+                ArrayList<String> refectorySchedule1 = new ArrayList<>();
+                ArrayList<Float> refectoryPrices1 = new ArrayList<>();
+
+                try {
+                    refectorySchedule1.add(MonLunch.getText());
+                    refectorySchedule1.add(MonDinner.getText());
+                    refectorySchedule1.add(TueLunch.getText());
+                    refectorySchedule1.add(TueDinner.getText());
+                    refectorySchedule1.add(WedLunch.getText());
+                    refectorySchedule1.add(WedDinner.getText());
+                    refectorySchedule1.add(ThuLunch.getText());
+                    refectorySchedule1.add(ThuDinner.getText());
+                    refectorySchedule1.add(FriLunch.getText());
+                    refectorySchedule1.add(FriDinner.getText());
+                    refectorySchedule1.add(SatLunch.getText());
+                    refectorySchedule1.add(SatDinner.getText());
+                    refectorySchedule1.add(SunLunch.getText());
+                    refectorySchedule1.add(SunDinner.getText());
+
+                    refectoryPrices1.add(new Float(MonLunchP.getText()));
+                    refectoryPrices1.add(new Float(MonDinnerP.getText()));
+                    refectoryPrices1.add(new Float(TueLunchP.getText()));
+                    refectoryPrices1.add(new Float(TueDinnerP.getText()));
+                    refectoryPrices1.add(new Float(WedLunchP.getText()));
+                    refectoryPrices1.add(new Float(WedDinnerP.getText()));
+                    refectoryPrices1.add(new Float(ThuLunchP.getText()));
+                    refectoryPrices1.add(new Float(ThuDinnerP.getText()));
+                    refectoryPrices1.add(new Float(FriLunchP.getText()));
+                    refectoryPrices1.add(new Float(FriDinnerP.getText()));
+                    refectoryPrices1.add(new Float(SatLunchP.getText()));
+                    refectoryPrices1.add(new Float(SatDinnerP.getText()));
+                    refectoryPrices1.add(new Float(SunLunchP.getText()));
+                    refectoryPrices1.add(new Float(SunDinnerP.getText()));
+                } catch(NumberFormatException ex) {
+                    errorLabel.setText("Wrong or empty entry");
+                    successLabel.setText("");
+                    frame.revalidate();
+                    return;
+                }
+                refectorySchedule = refectorySchedule1;
+                refectoryPrices = refectoryPrices1;
+                errorLabel.setText("");
+                successLabel.setText("Successfully Set");
+            }
+            else if(e.getSource().equals(addStudentB)) {
+                JFrame addStudentFrame = new JFrame("Add Student");
+                addStudentFrame.setResizable(false);
+                addStudentFrame.setSize(400, 500);
+                addStudentFrame.setLocation(100, 100);
+                addStudentFrame.setLocationRelativeTo(frame);
+                JPanel
             }
 
             frame.revalidate();
         }
+
+        private boolean isPasswordCorrect(char[] password, char[] input) {
+            if(input.length != password.length)
+                return false;
+            return Arrays.equals(password, input);
+        }
     }
 
-    public class MouseHandler extends MouseAdapter {
+    private class MouseHandler extends MouseAdapter {
 
         @Override
         public void mouseEntered(MouseEvent e) {}
@@ -1161,6 +1386,27 @@ public class UI {
             }
 
             frame.revalidate();
+        }
+    }
+
+    private class FocusHandler implements FocusListener {
+
+        @Override
+        public void focusGained(FocusEvent e) {
+            if(e.getSource().equals(usernameField)) {
+                usernameField.setText("");
+            } else if(e.getSource().equals(passwordField)) {
+                passwordField.setText("");
+            }
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            if(e.getSource().equals(usernameField)) {
+                usernameField.setText("Username");
+            } else if(e.getSource().equals(passwordField)) {
+                passwordField.setText("Password");
+            }
         }
     }
 }

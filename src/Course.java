@@ -9,14 +9,21 @@ public class Course {
     private Teacher teacher;
     private Days day;
     private Times time;
+    private int credits;
+    private int capacity;
+    private int attendants;
 
-    public Course(Subjects subject, String description, ArrayList<Course> prerequisites, Teacher teacher, Days day, Times time) {
+    public Course(Subjects subject, String description, ArrayList<Course> prerequisites,
+                  Teacher teacher, Days day, Times time, int credits, int capacity) {
         this.subject = subject;
         this.description = description;
         this.prerequisites = prerequisites;
         this.teacher = teacher;
         this.day = day;
         this.time = time;
+        this.credits = credits;
+        this.capacity = capacity;
+        attendants = 0;
     }
 
     public Subjects getSubject() {
@@ -29,5 +36,17 @@ public class Course {
 
     public Times getTime() {
         return time;
+    }
+
+    public int getCredits() {
+        return credits;
+    }
+
+    public int getAttendants() {
+        return attendants;
+    }
+
+    public int getCapacity() {
+        return capacity;
     }
 }

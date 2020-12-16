@@ -1,19 +1,24 @@
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class UniversitySystem {
 
-    Administrator administrator;
-    ArrayList<Teacher> teachers;
-    ArrayList<Student> students;
-    ArrayList<Course> courses;
-    UI systemUI;
+    private Administrator administrator;
+    private ArrayList<Teacher> teachers;
+    private ArrayList<Student> students;
+    private ArrayList<Course> courses;
+    private UI systemUI;
+    private ArrayList<String> refectorySchedule;
+    private ArrayList<Float> refectoryPrices;
 
     public UniversitySystem() {
-        administrator = Administrator.getInstance("Admin", "admiN");
+        administrator = Administrator.getInstance("Admin", new char[]{'a', 'd', 'm', 'i', 'n', 'a', 'd', 'm', 'i', 'n'});
         teachers = new ArrayList<>();
         students = new ArrayList<>();
         courses = new ArrayList<>();
-        systemUI = new UI();
+        refectorySchedule = new ArrayList<>();
+        refectoryPrices = new ArrayList<>();
+        systemUI = new UI(administrator, students, teachers, courses, refectorySchedule, refectoryPrices);
     }
 
     public void addTeacher(Teacher newTeacher) {
