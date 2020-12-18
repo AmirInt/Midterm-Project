@@ -1,12 +1,24 @@
+import java.util.HashMap;
+
 public class Student extends Member {
 
     private float average;
-    private int credits;
+    private float balance;
+    private HashMap<Course, Integer> studentCourses;
+    private HashMap<Course, Integer> pastCourses;
+    private int currentCredits;
+    private int totalCredits;
+    private boolean[][] scheduledMeals;
 
     public Student(String userName, char[] password) {
         super(userName, password);
         average = 0;
-        credits = 0;
+        balance = 0;
+        currentCredits = 0;
+        studentCourses = new HashMap<>();
+        pastCourses = new HashMap<>();
+        scheduledMeals = new boolean[7][2];
+        setAllFalse();
     }
 
     @Override
@@ -19,13 +31,10 @@ public class Student extends Member {
         super.setUserName(userName);
     }
 
-    public void setAverage(float average) {
-        if(average <= 20 & average >= 0)
-            this.average = average;
-    }
-
-    public void setCredits(int credits) {
-        this.credits = credits;
+    public void calculateAverage(Course course, float courseGrade) {
+        average = average * totalCredits + course.getCredits() * courseGrade;
+        setTotalCredits(totalCredits + course.getCredits());
+        average /= totalCredits;
     }
 
     @Override
@@ -42,8 +51,57 @@ public class Student extends Member {
         return average;
     }
 
-    public int getCredits() {
-        return credits;
+    public void setBalance(float credits) {
+        this.balance = credits;
+    }
+
+    public float getBalance() {
+        return balance;
+    }
+
+    public void addToCourses(Course selectedCourse) {
+        studentCourses.put(selectedCourse, 0);
+    }
+
+    public int getCurrentCredits() {
+        return currentCredits;
+    }
+
+    public void setTotalCredits(int totalCredits) {
+        this.totalCredits = totalCredits;
+    }
+
+    public HashMap<Course, Integer> getStudentCourses() {
+        return studentCourses;
+    }
+
+    public HashMap<Course, Integer> getPastCourses() {
+        return pastCourses;
+    }
+
+    public void addToPastCourses(Course pastCourse, int grade) {
+        pastCourses.put(pastCourse, grade);
+        calculateAverage(pastCourse, grade);
+    }
+
+    private void setAllFalse() {
+        for (int i = 0; i < 7; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                scheduledMeals[i][j] = false;
+            }
+        }
+    }
+
+    public void addToReserved(int day, int meal) {
+        scheduledMeals[day][meal] = true;
+    }
+
+    public boolean isReserved(int day, int meal) {
+        return scheduledMeals[day][meal];
+    }
+
+    public boolean[][] getScheduledMeals() {
+        return scheduledMeals;
     }
 
     @Override

@@ -1,3 +1,3 @@
 public enum Days {
-    MON, TUE, WED, THU, FRI, SAT;
+    MON, TUE, WED, THU, FRI, SAT
 }

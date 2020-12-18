@@ -1,7 +1,12 @@
+import java.util.ArrayList;
+
 public class Teacher extends Member {
+
+    private ArrayList<Course> teacherCourses;
 
     public Teacher(String userName, char[] password) {
         super(userName, password);
+        teacherCourses = new ArrayList<>();
     }
 
     @Override
@@ -22,6 +27,14 @@ public class Teacher extends Member {
     @Override
     public char[] getPassword() {
         return super.getPassword();
+    }
+
+    public void addToCourses(Course course) {
+        teacherCourses.add(course);
+    }
+
+    public ArrayList<Course> getTeacherCourses() {
+        return teacherCourses;
     }
 
     @Override
