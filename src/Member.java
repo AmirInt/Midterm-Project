@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Member {
+public class Member implements Serializable {
 
     private String userName;
     private char[] password;
@@ -11,8 +12,7 @@ public class Member {
     }
 
     public void setPassword(char[] password) {
-        if(password.length > 8)
-            this.password = password;
+        this.password = password;
     }
 
     public void setUserName(String userName) {

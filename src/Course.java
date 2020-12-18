@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Course {
+public class Course implements Serializable {
 
     private Subjects subject;
     private String description;
@@ -18,19 +19,6 @@ public class Course {
         attendants = 0;
         courseStudents = new HashMap<>();
         prerequisites = new ArrayList<>();
-        courseStudents = new HashMap<>();
-    }
-
-    public Course(Subjects subject, ArrayList<Subjects> prerequisites,
-                  Teacher teacher, Days day, Times time, int credits, int capacity) {
-        this.subject = subject;
-        this.prerequisites = prerequisites;
-        this.teacher = teacher;
-        this.day = day;
-        this.time = time;
-        this.credits = credits;
-        this.capacity = capacity;
-        attendants = 0;
         courseStudents = new HashMap<>();
     }
 
@@ -94,8 +82,8 @@ public class Course {
             default:
                 timeString = "14 - 16";
         }
-        stringBuilder.append(timeString).append(" Credits: ").append(credits).append(" Capacity: ").append(capacity);
-        stringBuilder.append(" Attendants: ").append(attendants);
+        stringBuilder.append(timeString).append("\n").append(" Credits: ").append(credits).append(" Capacity: ").append(capacity);
+        stringBuilder.append("\n").append(" Attendants: ").append(attendants).append("\n");
         if(prerequisites != null) {
             stringBuilder.append("Prerequisites:\n");
             for (Subjects subject :

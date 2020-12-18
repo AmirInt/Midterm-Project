@@ -92,8 +92,16 @@ public class Student extends Member {
         }
     }
 
-    public void addToReserved(int day, int meal) {
+    public void addToReserved(int day, int meal, float price) {
         scheduledMeals[day][meal] = true;
+        balance -= price;
+    }
+
+    public void removeReserved(int day, int meal, float price) {
+        if(scheduledMeals[day][meal]) {
+            scheduledMeals[day][meal] = false;
+            balance += price;
+        }
     }
 
     public boolean isReserved(int day, int meal) {
@@ -102,6 +110,14 @@ public class Student extends Member {
 
     public boolean[][] getScheduledMeals() {
         return scheduledMeals;
+    }
+
+    public void clearScheduledMeals() {
+        for (int i = 0; i < 7; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                scheduledMeals[i][j] = false;
+            }
+        }
     }
 
     @Override

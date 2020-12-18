@@ -4,6 +4,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,6 +16,8 @@ import java.util.HashSet;
  */
 public class UI {
 
+    private static UI ui = null;
+
     private Administrator administrator;
     private ArrayList<Student> students;
     private ArrayList<Teacher> teachers;
@@ -22,6 +25,7 @@ public class UI {
     private String[][] refectorySchedule;
     private Member workingMember;
     private MouseHandler mouseHandler;
+    private Saviour saver;
 
     private JFrame frame;
     private Color studentColour;
@@ -113,10 +117,26 @@ public class UI {
     private GridBagConstraints constraints = new GridBagConstraints();
 
     /**
+     * Returns a unique instance of this class
+     * @param administrator The administrator of the system
+     * @param students The students list of the system
+     * @param teachers The teachers list of the system
+     * @param courses The courses list of the system
+     * @param refectorySchedule The refectory meal schedule
+     * @param refectoryPrices The refectory meal prices
+     */
+    public static void getInstance(Administrator administrator, ArrayList<Student> students, ArrayList<Teacher> teachers,
+       ArrayList<Course> courses, String[][] refectorySchedule, float[][] refectoryPrices, Saviour saver) {
+        if(ui == null)
+            ui = new UI(administrator,  students,  teachers,
+                    courses,  refectorySchedule, refectoryPrices, saver);
+    }
+
+    /**
      * Instantiates this class
      */
-    public UI(Administrator administrator, ArrayList<Student> students, ArrayList<Teacher> teachers,
-              ArrayList<Course> courses, String[][] refectorySchedule, float[][] refectoryPrices) {
+    private UI(Administrator administrator, ArrayList<Student> students, ArrayList<Teacher> teachers,
+               ArrayList<Course> courses, String[][] refectorySchedule, float[][] refectoryPrices, Saviour saver) {
 
 //        Getting the system members and attributes
         this.administrator = administrator;
@@ -124,6 +144,7 @@ public class UI {
         this.teachers = teachers;
         this.courses = courses;
         this.refectorySchedule = refectorySchedule;
+        this.saver = saver;
 
         this.mealPrices = new JTextField[7][2];
         for (int i = 0; i < 7; ++i) {
@@ -133,24 +154,20 @@ public class UI {
             }
         }
         checkBoxes = new JCheckBox[7][2];
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < 7; ++i) {
+            for (int j = 0; j < 2; ++j) {
                 checkBoxes[i][j] = new JCheckBox();
                 checkBoxes[i][j].setOpaque(false);
             }
         }
         meals = new JTextField[7][2];
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < 7; ++i) {
+            for (int j = 0; j < 2; ++j) {
                 meals[i][j] = new JTextField(refectorySchedule[i][j]);
                 meals[i][j].setOpaque(false);
-                System.out.println(meals[i][j].getText());
             }
         }
 
-        EventHandler eventHandler = new EventHandler();
-        mouseHandler = new MouseHandler();
-        ListSelectionHandler listSelectionHandler = new ListSelectionHandler();
 
 //        Setting some common attributes in the programme
         studentColour = new Color(30, 90, 20);
@@ -164,6 +181,10 @@ public class UI {
                 "Credentials", 4, 0, mainFont);
         adminCommonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(adminColour, 2),
                 "Credentials", 4, 0, mainFont);
+
+        EventHandler eventHandler = new EventHandler();
+        mouseHandler = new MouseHandler();
+        ListSelectionHandler listSelectionHandler = new ListSelectionHandler();
 
         newUsername = new JLabel("New username");
         newUsername.setPreferredSize(new Dimension(180, 50));
@@ -311,6 +332,8 @@ public class UI {
         JLabel passwordL = new JLabel("Password");
         passwordL.setForeground(Color.WHITE);
         passwordL.setFont(mainFont);
+        usernameField.setText("");
+        passwordField.setText("");
         creditsBoard.add(usernameL);
         creditsBoard.add(usernameField);
         creditsBoard.add(passwordL);
@@ -331,7 +354,7 @@ public class UI {
 
         loginPanel = new JPanel(new BorderLayout());
         loginPanel.add(introPanel, BorderLayout.NORTH);
-        JPanel secondaryPanel = new ImageJPanel("Project Files\\loading-bg-breeze-rpeast-morespace.jpeg");
+        JPanel secondaryPanel = new ImageJPanel("Project Files\\Pictures\\loading-bg-breeze-rpeast-morespace.jpeg");
         secondaryPanel.setLayout(new GridBagLayout());
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -354,7 +377,7 @@ public class UI {
     public void setStudentPanel() {
 
 //        Creating the general studentPanel here with its buttons and fields
-        studentPanel = new ImageJPanel("Project Files\\istockphoto-610850338-1024x1024 2.jpg");
+        studentPanel = new ImageJPanel("Project Files\\Pictures\\istockphoto-610850338-1024x1024 2.jpg");
         studentPanel.setLayout(new BorderLayout());
         studentMainB = new JLabel("Main Panel");
         studentMainB.setPreferredSize(new Dimension(90, 40));
@@ -519,7 +542,7 @@ public class UI {
 
         balancePanel = new JPanel(new GridBagLayout());
         balancePanel.setOpaque(false);
-        JPanel balancePanelSecondary = new JPanel(new GridLayout(5, 1));
+        JPanel balancePanelSecondary = new JPanel(new GridLayout(5, 1, 5, 5));
         balancePanelSecondary.setOpaque(false);
         JLabel cardNumberL = new JLabel("Card number: ");
         cardNumberL.setPreferredSize(new Dimension(180, 50));
@@ -551,7 +574,7 @@ public class UI {
     /**
      * Creates the student reservation panel
      */
-    public void setStudentReservationPanel() throws IndexOutOfBoundsException {
+    public void setStudentReservationPanel() {
 
         reservationPanel = new JPanel(new GridLayout(9, 5, 20, 20));
         reservationPanel.setOpaque(false);
@@ -589,32 +612,30 @@ public class UI {
         reservationPanel.add(new JLabel());
         reservationPanel.add(dinner);
         reservationPanel.add(new JLabel());
-        String day;
         for (int i = 0; i < 7; ++i) {
             switch (i) {
                 case 0:
-                    day = "Mon";
+                    reservationPanel.add(Mon);
                     break;
                 case 1:
-                    day = "Tue";
+                    reservationPanel.add(Tue);
                     break;
                 case 2:
-                    day = "Wed";
+                    reservationPanel.add(Wed);
                     break;
                 case 3:
-                    day = "Thu";
+                    reservationPanel.add(Thu);
                     break;
                 case 4:
-                    day = "Fri";
+                    reservationPanel.add(Fri);
                     break;
                 case 5:
-                    day = "Sat";
+                    reservationPanel.add(Sat);
                     break;
                 default:
-                    day = "Sun";
+                    reservationPanel.add(Sun);
                     break;
             }
-            reservationPanel.add(new JLabel(day));
             reservationPanel.add(mealsLabels[i][0]);
             reservationPanel.add(checkBoxes[i][0]);
             reservationPanel.add(mealsLabels[i][1]);
@@ -655,6 +676,7 @@ public class UI {
         creditSelectionPanelSecondary.add(successLabel, constraints);
         constraints.gridy = 0;
         creditSelectionPanel.add(creditSelectionPanelSecondary);
+        presentCreditsList.setListData(courses.toArray(new Course[0]));
         presentCreditsList.setOpaque(false);
         presentCreditsList.setFont(mainFont);
         presentCreditsList.setSelectionBackground(studentColour);
@@ -672,11 +694,8 @@ public class UI {
      */
     public void setTeacherPanel() {
 
-//        Creating the mouse listener
-        MouseHandler mouseHandler = new MouseHandler();
-
 //        Creating the general and initial panel here
-        teacherPanel = new ImageJPanel("Project Files\\istockphoto-610850338-1024x1024 2.jpg");
+        teacherPanel = new ImageJPanel("Project Files\\Pictures\\istockphoto-610850338-1024x1024 2.jpg");
         teacherPanel.setLayout(new BorderLayout());
         teacherMainB = new JLabel("Main panel");
         teacherMainB.setFont(barFont);
@@ -868,11 +887,8 @@ public class UI {
      */
     public void setAdminPanel() {
 
-//        Creating the mouse listener
-        MouseHandler mouseHandler = new MouseHandler();
-
 //        Creating the initial admin panel here
-        adminPanel = new ImageJPanel("Project Files\\white-technology-2K-wallpaper.jpg");
+        adminPanel = new ImageJPanel("Project Files\\Pictures\\white-technology-2K-wallpaper.jpg");
         adminPanel.setLayout(new BorderLayout());
         adminMainB = new JLabel("Main panel");
         adminMainB.setFont(barFont);
@@ -1039,7 +1055,7 @@ public class UI {
      */
     public void setAdminSTPanel() {
 
-        JPanel scrollPanePanel = new ImageJPanel("Project Files\\white-technology-2K-wallpaper.jpg");
+        JPanel scrollPanePanel = new ImageJPanel("Project Files\\Pictures\\white-technology-2K-wallpaper.jpg");
         scrollPanePanel.setLayout(new BorderLayout(10, 10));
         scrollPanePanel.setOpaque(false);
         JList<Student> studentsList = new JList<>(students.toArray(new Student[0]));
@@ -1110,12 +1126,12 @@ public class UI {
 
     }
 
-    public class EventHandler implements ActionListener {
+    private class EventHandler implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             if(e.getSource().equals(usernameField) || e.getSource().equals(passwordField)
-                || e.getSource().equals(enterButton)) {
+                    || e.getSource().equals(enterButton)) {
                 int entranceMode = comboBox.getSelectedIndex();
                 switch (entranceMode) {
                     case 0:
@@ -1123,8 +1139,8 @@ public class UI {
                         if (workingMember.getUserName().equals(usernameField.getText())
                                 && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
                             errorLabel.setText("");
-                            setAdminPanel();
-                            setAdminMainBoard();
+                            ui.setAdminPanel();
+                            ui.setAdminMainBoard();
                             adminPanel.add(adminMainPanel, BorderLayout.CENTER);
                             frame.setContentPane(adminPanel);
                         } else errorLabel.setText("Invalid username or password");
@@ -1140,8 +1156,8 @@ public class UI {
                         }
                         if (workingMember != null && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
                             errorLabel.setText("");
-                            setTeacherPanel();
-                            setTeacherMainBoard();
+                            ui.setTeacherPanel();
+                            ui.setTeacherMainBoard();
                             teacherPanel.add(teacherMainPanel, BorderLayout.CENTER);
                             frame.setContentPane(teacherPanel);
                         } else errorLabel.setText("Invalid username or password");
@@ -1157,39 +1173,33 @@ public class UI {
                         }
                         if (workingMember != null && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
                             errorLabel.setText("");
-                            setStudentPanel();
-                            setStudentMainBoard();
+                            ui.setStudentPanel();
+                            ui.setStudentMainBoard();
                             studentPanel.add(studentMainPanel, BorderLayout.CENTER);
                             frame.setContentPane(studentPanel);
                         } else errorLabel.setText("Invalid username or password");
                 }
-            } else if(e.getSource().equals(changeButton)) {
+            }
+            else if(e.getSource().equals(changeButton)) {
                 String newUsername = newUsernameField.getText();
                 char[] newPassword = newPasswordField.getPassword();
-                System.out.println(newPassword);
                 if(!newUsername.equals("")) {
                     if (workingMember instanceof Student)
                         for (Student student :
-                                students) {
+                                students)
                             if (student.getUserName().equals(newUsername) && student != workingMember) {
                                 errorLabel.setText("Username already in use");
                                 frame.revalidate();
-                                return;
                             }
-                        }
-                    else if (workingMember instanceof Teacher) {
+                    else if (workingMember instanceof Teacher)
                         for (Teacher teacher :
-                                teachers) {
+                                teachers)
                             if (teacher.getUserName().equals(newUsername) && teacher != workingMember) {
                                 errorLabel.setText("Username already in use");
                                 frame.revalidate();
-                                return;
                             }
-                        }
-                    }
                 }
                 if(newPassword.length < 8) {
-                    System.out.println(newPassword.length);
                     errorLabel.setText("Password not long enough");
                     successLabel.setText("");
                 }
@@ -1205,12 +1215,23 @@ public class UI {
                     if(!newUsername.equals(""))
                         workingMember.setUserName(newUsername);
                     workingMember.setPassword(newPassword);
+                    try {
+                        if(workingMember instanceof Student)
+                            saver.writeStudents(students);
+                        else if(workingMember instanceof Teacher)
+                            saver.writeTeachers(teachers);
+                        else saver.writeAdmin(administrator);
+                    } catch (IOException ex) {
+                        errorLabel.setText("Failed, try reopening the app");
+                        successLabel.setText("");
+                    }
                     errorLabel.setText("");
                     successLabel.setText("Successfully set");
                 }
                 newUsernameField.setText("");
                 newPasswordField.setText("");
                 repeatPasswordField.setText("");
+
             }
             else if(e.getSource().equals(setButton)) {
 
@@ -1232,6 +1253,19 @@ public class UI {
                     return;
                 }
                 refectorySchedule = refectorySchedule1;
+                for (Student student:
+                        students) {
+                    student.clearScheduledMeals();
+                }
+                try {
+                    saver.writeRefectorySchedule(refectorySchedule);
+                    saver.writeRefectoryPrices(refectoryPrices1);
+                    saver.writeStudents(students);
+                } catch (IOException ex) {
+                    errorLabel.setText("Failed, try reopening the app");
+                    successLabel.setText("");
+                    return;
+                }
                 errorLabel.setText("");
                 successLabel.setText("Successfully Set");
             }
@@ -1246,17 +1280,33 @@ public class UI {
                     String newUN = newUsernameField.getText();
                     char[] newPS = newPasswordField.getPassword();
                     if(e.getSource().equals(addAsStudentButton) && doesStudentExist(newUN)
-                        || e.getSource().equals(addAsTeacherButton) && doesTeacherExist(newUN)) {
+                            || e.getSource().equals(addAsTeacherButton) && doesTeacherExist(newUN)) {
                         errorLabel.setText("Username already in use");
                         successLabel.setText("");
                         frame.revalidate();
                         return;
                     }
                     else {
-                        if(e.getSource().equals(addAsStudentButton))
+                        if(e.getSource().equals(addAsStudentButton)) {
                             students.add(new Student(newUN, newPS));
-                        else
+                            try {
+                                saver.writeStudents(students);
+                            } catch (IOException ex) {
+                                errorLabel.setText("Failed, try reopening the app");
+                                successLabel.setText("");
+                                return;
+                            }
+                        }
+                        else {
                             teachers.add(new Teacher(newUN, newPS));
+                            try {
+                                saver.writeTeachers(teachers);
+                            } catch (IOException ex) {
+                                errorLabel.setText("Failed, try reopening the app");
+                                successLabel.setText("");
+                                return;
+                            }
+                        }
                         errorLabel.setText("");
                         successLabel.setText("Successfully added");
                     }
@@ -1272,9 +1322,9 @@ public class UI {
                 }
                 Teacher teacher = (Teacher) workingMember;
                 for (Course current:
-                     teacher.getTeacherCourses()) {
+                        teacher.getTeacherCourses()) {
                     if(current.getDay() == daysC.getItemAt(daysC.getSelectedIndex())
-                        && current.getTime() == timesC.getItemAt(timesC.getSelectedIndex())) {
+                            && current.getTime() == timesC.getItemAt(timesC.getSelectedIndex())) {
                         successLabel.setText("");
                         errorLabel.setText("This time is filled");
                         return;
@@ -1292,10 +1342,15 @@ public class UI {
                     newCourse.setDescription();
                     courses.add(newCourse);
                     teacher.addToCourses(newCourse);
+                    saver.writeTeachers(teachers);
+                    saver.writeCourses(courses);
                     errorLabel.setText("");
                     successLabel.setText("Successfully Added");
                 } catch (NumberFormatException ex) {
                     errorLabel.setText("Wrong data form");
+                    successLabel.setText("");
+                } catch (IOException ex) {
+                    errorLabel.setText("Failed, try reopening the app");
                     successLabel.setText("");
                 }
             }
@@ -1306,7 +1361,7 @@ public class UI {
                     return;
                 }
                 for (char c:
-                     cardNumberT.getText().toCharArray()) {
+                        cardNumberT.getText().toCharArray()) {
                     if(c < '0' || c > '9') {
                         errorLabel.setText("Wrong card number");
                         successLabel.setText("");
@@ -1330,16 +1385,22 @@ public class UI {
                     successLabel.setText("");
                     return;
                 }
+                Student student = (Student) workingMember;
+                student.setBalance(student.getBalance() + Float.parseFloat(balanceT.getText()));
+                try {
+                    saver.writeStudents(students);
+                } catch (IOException ex) {
+                    errorLabel.setText("Failed, try reopening the app");
+                    successLabel.setText("");
+                    return;
+                }
                 errorLabel.setText("");
                 successLabel.setText("Successfully processed");
-                Student student = (Student) workingMember;
-                System.out.println(Float.parseFloat(balanceT.getText()));
-                student.setBalance(student.getBalance() + Float.parseFloat(balanceT.getText()));
             }
             else if(e.getSource().equals(reserveButton)) {
                 Student student = (Student) workingMember;
                 for (int i = 0; i < 7; ++i) {
-                    for (int j = 0; j < 2; j++) {
+                    for (int j = 0; j < 2; ++j) {
                         if(checkBoxes[i][j].isSelected()) {
                             if(student.getScheduledMeals()[i][j]) {
                                 errorLabel.setText("Meal already reserved");
@@ -1349,22 +1410,26 @@ public class UI {
                                 successLabel.setText("");
                                 return;
                             } else {
-                                student.addToReserved(i, j);
-                                student.setBalance(student.getBalance() - Float.parseFloat(mealPrices[i][j].getText()));
+                                student.addToReserved(i, j, Float.parseFloat(mealPrices[i][j].getText()));
                                 errorLabel.setText("");
                                 successLabel.setText("Successfully Processed");
                             }
-                        }
+                        } else student.removeReserved(i, j, Float.parseFloat(mealPrices[i][j].getText()));
                     }
+                }
+                try {
+                    saver.writeStudents(students);
+                } catch (IOException ex) {
+                    errorLabel.setText("Failed, try reopening the app");
+                    successLabel.setText("");
+                    return;
                 }
             }
             else if(e.getSource().equals(addCreditButton)) {
                 Student student = (Student) workingMember;
                 Course selectedCourse = presentCreditsList.getSelectedValue();
-                System.out.println("Student: " + student.getUserName());
-                System.out.println("The selected course:\n" + selectedCourse.getDescription());
                 if(student.getAverage() < 17 && student.getCurrentCredits() + selectedCourse.getCredits() > 20
-                    || student.getAverage() >= 17 && student.getCurrentCredits() + selectedCourse.getCredits() > 24) {
+                        || student.getAverage() >= 17 && student.getCurrentCredits() + selectedCourse.getCredits() > 24) {
                     errorLabel.setText("Credits number exceeds");
                     successLabel.setText("");
                     return;
@@ -1384,13 +1449,35 @@ public class UI {
                     successLabel.setText("");
                     return;
                 }
+                if(isTimeFilled(student, selectedCourse)) {
+                    errorLabel.setText("Time is filled");
+                    successLabel.setText("");
+                    return;
+                }
                 student.addToCourses(selectedCourse);
                 selectedCourse.addStudent(student);
+                try {
+                    saver.writeStudents(students);
+                    saver.writeCourses(courses);
+                } catch (IOException ex) {
+                    errorLabel.setText("Failed, try reopening the app");
+                    successLabel.setText("");
+                    return;
+                }
                 errorLabel.setText("");
                 successLabel.setText("Successfully added to ye' courses");
             }
 
             frame.revalidate();
+        }
+
+        private boolean isTimeFilled(Student student, Course course) {
+            for (Course studentCourse:
+                 student.getStudentCourses().keySet())
+                if(studentCourse.getDay() == course.getDay()
+                    || studentCourse.getTime() == course.getTime())
+                    return true;
+            return false;
         }
 
         private boolean doesStudentExist(String username) {
@@ -1446,16 +1533,14 @@ public class UI {
 
         private boolean isPreviouslyTaken(Course selectedCourse, Student student) {
             for (Course studentCourse:
-                 student.getPastCourses().keySet()) {
+                    student.getPastCourses().keySet()) {
                 if(selectedCourse.getSubject().equals(studentCourse.getSubject())) {
-                    System.out.println("detected previously taken course");
                     return true;
                 }
             }
             for (Course studentPastCourse:
-                 student.getPastCourses().keySet()) {
+                    student.getPastCourses().keySet()) {
                 if(selectedCourse.getSubject().equals(studentPastCourse.getSubject())) {
-                    System.out.println("detected previously taken course");
                     return true;
                 }
             }
@@ -1464,9 +1549,6 @@ public class UI {
     }
 
     private class MouseHandler extends MouseAdapter {
-
-        @Override
-        public void mouseEntered(MouseEvent e) {}
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -1485,7 +1567,8 @@ public class UI {
                 studentPanel.revalidate();
                 frame.setContentPane(studentPanel);
 
-            } else if(interactedLabel.equals(changeUNAndPW)) {
+            }
+            else if(interactedLabel.equals(changeUNAndPW)) {
                 studentPanel.removeAll();
                 setStudentPanel();
                 setStudentUNPSPanel();
@@ -1493,7 +1576,8 @@ public class UI {
                 studentPanel.revalidate();
                 frame.setContentPane(studentPanel);
 
-            } else if(interactedLabel.equals(purchaseBalance)) {
+            }
+            else if(interactedLabel.equals(purchaseBalance)) {
                 studentPanel.removeAll();
                 setStudentPanel();
                 setBalancePanel();
@@ -1501,7 +1585,8 @@ public class UI {
                 studentPanel.revalidate();
                 frame.setContentPane(studentPanel);
 
-            } else if(interactedLabel.equals(reserve)) {
+            }
+            else if(interactedLabel.equals(reserve)) {
                 studentPanel.removeAll();
                 setStudentPanel();
                 try {
@@ -1517,7 +1602,8 @@ public class UI {
                 studentPanel.revalidate();
                 frame.setContentPane(studentPanel);
 
-            } else if(interactedLabel.equals(selectCredits)) {
+            }
+            else if(interactedLabel.equals(selectCredits)) {
                 studentPanel.removeAll();
                 setStudentPanel();
                 setCreditSelectionPanel();
@@ -1525,7 +1611,8 @@ public class UI {
                 studentPanel.repaint();
                 frame.setContentPane(studentPanel);
 
-            } else if(interactedLabel.equals(teacherMainB)) {
+            }
+            else if(interactedLabel.equals(teacherMainB)) {
                 teacherPanel.removeAll();
                 setTeacherPanel();
                 setTeacherMainBoard();
@@ -1533,7 +1620,8 @@ public class UI {
                 teacherPanel.repaint();
                 frame.setContentPane(teacherPanel);
 
-            } else if(interactedLabel.equals(teacherChangeUNAndPW)) {
+            }
+            else if(interactedLabel.equals(teacherChangeUNAndPW)) {
                 teacherPanel.removeAll();
                 setTeacherPanel();
                 setTeacherUNPSPanel();
@@ -1541,7 +1629,8 @@ public class UI {
                 teacherPanel.repaint();
                 frame.setContentPane(teacherPanel);
 
-            } else if(interactedLabel.equals(teacherAddToCoursesB)) {
+            }
+            else if(interactedLabel.equals(teacherAddToCoursesB)) {
                 teacherPanel.removeAll();
                 setTeacherPanel();
                 setCourseCreationPanel();
@@ -1549,7 +1638,8 @@ public class UI {
                 teacherPanel.repaint();
                 frame.setContentPane(teacherPanel);
 
-            } else if(interactedLabel.equals(adminMainB)) {
+            }
+            else if(interactedLabel.equals(adminMainB)) {
                 adminPanel.removeAll();
                 setAdminPanel();
                 setAdminMainBoard();
@@ -1557,7 +1647,8 @@ public class UI {
                 adminPanel.repaint();
                 frame.setContentPane(adminPanel);
 
-            } else if(interactedLabel.equals(adminChangeUNAndPW)) {
+            }
+            else if(interactedLabel.equals(adminChangeUNAndPW)) {
                 adminPanel.removeAll();
                 setAdminPanel();
                 setAdminUNPSPanel();
@@ -1565,7 +1656,8 @@ public class UI {
                 adminPanel.repaint();
                 frame.setContentPane(adminPanel);
 
-            } else if(interactedLabel.equals(adminRefectoryB)) {
+            }
+            else if(interactedLabel.equals(adminRefectoryB)) {
                 adminPanel.removeAll();
                 setAdminPanel();
                 setAdminRefectoryPanel();
@@ -1573,7 +1665,8 @@ public class UI {
                 adminPanel.repaint();
                 frame.setContentPane(adminPanel);
 
-            } else if(interactedLabel.equals(adminSTB)) {
+            }
+            else if(interactedLabel.equals(adminSTB)) {
                 adminPanel.removeAll();
                 setAdminPanel();
                 setAdminSTPanel();
@@ -1598,9 +1691,11 @@ public class UI {
                 courseStudents.repaint();
             }
             else if(e.getSource().equals(presentCreditsList)) {
-                Course selectedCourse = currentCredits.getSelectedValue();
-                if(selectedCourse != null)
+                Course selectedCourse = presentCreditsList.getSelectedValue();
+                if(selectedCourse != null) {
+                    selectedCourse.setDescription();
                     courseDescription.setText(selectedCourse.getDescription());
+                }
                 courseDescription.repaint();
             }
             frame.revalidate();
