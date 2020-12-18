@@ -5,17 +5,28 @@ public class UniversitySystem {
     private ArrayList<Teacher> teachers;
     private ArrayList<Student> students;
     private ArrayList<Course> courses;
+    private String[][] refectorySchedule = new String[7][2];
+    private float[][] refectoryPrices = new float[7][2];
 
     public UniversitySystem() {
         Administrator administrator = Administrator.getInstance("Admin", new char[]{'a', 'd', 'm', 'i', 'n', 'a', 'd', 'm', 'i', 'n'});
         teachers = new ArrayList<>();
         students = new ArrayList<>();
         courses = new ArrayList<>();
-        String[][] refectorySchedule = new String[7][2];
-        float[][] refectoryPrices = new float[7][2];
+        refectorySchedule = new String[7][2];
+        refectoryPrices = new float[7][2];
+        setAllArrays();
         new UI(administrator, students, teachers, courses, refectorySchedule, refectoryPrices);
     }
 
+    private void setAllArrays() {
+        for (int i = 0; i < 7; ++i) {
+            for (int j = 0; j < 2; ++j) {
+                refectorySchedule[i][j] = "";
+                refectoryPrices[i][j] = 0;
+            }
+        }
+    }
 //    public void addTeacher(Teacher newTeacher) {
 //        for (Teacher existingTeacher:
 //             teachers)
