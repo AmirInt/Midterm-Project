@@ -37,6 +37,10 @@ public class Teacher extends Member {
         return teacherCourses;
     }
 
+    public void removeCourse(Course course) {
+        teacherCourses.remove(course);
+    }
+
     @Override
     public boolean equals(Object o) {
         return super.equals(o);

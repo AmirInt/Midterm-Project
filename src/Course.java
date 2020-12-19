@@ -26,6 +26,10 @@ public class Course implements Serializable {
         this.subject = subject;
     }
 
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
     public Subjects getSubject() {
         return subject;
     }
@@ -104,6 +108,7 @@ public class Course implements Serializable {
     public void addStudent(Student student) {
         courseStudents.put(student, (float) 0);
         ++attendants;
+        setDescription();
     }
 
     public void setPrerequisites(ArrayList<Subjects> prerequisites) {

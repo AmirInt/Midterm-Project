@@ -4,8 +4,8 @@ public class Student extends Member {
 
     private float average;
     private float balance;
-    private HashMap<Course, Integer> studentCourses;
-    private HashMap<Course, Integer> pastCourses;
+    private HashMap<Course, Float> studentCourses;
+    private HashMap<Course, Float> pastCourses;
     private int currentCredits;
     private int totalCredits;
     private boolean[][] scheduledMeals;
@@ -60,7 +60,7 @@ public class Student extends Member {
     }
 
     public void addToCourses(Course selectedCourse) {
-        studentCourses.put(selectedCourse, 0);
+        studentCourses.put(selectedCourse, (float) 0);
     }
 
     public int getCurrentCredits() {
@@ -71,15 +71,15 @@ public class Student extends Member {
         this.totalCredits = totalCredits;
     }
 
-    public HashMap<Course, Integer> getStudentCourses() {
+    public HashMap<Course, Float> getStudentCourses() {
         return studentCourses;
     }
 
-    public HashMap<Course, Integer> getPastCourses() {
+    public HashMap<Course, Float> getPastCourses() {
         return pastCourses;
     }
 
-    public void addToPastCourses(Course pastCourse, int grade) {
+    public void addToPastCourses(Course pastCourse, float grade) {
         pastCourses.put(pastCourse, grade);
         calculateAverage(pastCourse, grade);
     }
@@ -120,6 +120,11 @@ public class Student extends Member {
         }
     }
 
+    public void endCourse(Course course) {
+        float grade = studentCourses.remove(course);
+        calculateAverage(course, grade);
+        pastCourses.put(course, grade);
+    }
     @Override
     public boolean equals(Object o) {
         return super.equals(o);
