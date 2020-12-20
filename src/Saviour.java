@@ -10,6 +10,7 @@ public class Saviour {
              students) {
             objectWriter.writeObject(student);
         }
+        objectWriter.close();
         outputStream.close();
     }
 
@@ -20,6 +21,7 @@ public class Saviour {
                 teachers) {
             objectWriter.writeObject(teacher);
         }
+        objectWriter.close();
         outputStream.close();
     }
 
@@ -30,6 +32,7 @@ public class Saviour {
                 courses) {
             objectWriter.writeObject(course);
         }
+        objectWriter.close();
         outputStream.close();
     }
 
@@ -37,6 +40,7 @@ public class Saviour {
         FileOutputStream outputStream = new FileOutputStream("Project Files\\Files\\Administrator.dat");
         ObjectOutputStream objectWriter = new ObjectOutputStream(outputStream);
         objectWriter.writeObject(admin);
+        objectWriter.close();
         outputStream.close();
     }
 

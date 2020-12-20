@@ -21,14 +21,12 @@ public class UI {
     private String[][] refectorySchedule;
     private Member workingMember;
     private MouseHandler mouseHandler;
-    private FocusHandler focusHandler;
     private Saviour saver;
 
     private JFrame frame;
     private final Color studentColour;
     private final Color teacherColour;
     private final Color adminColour;
-    private final Color courseColour;
     private Font barFont;
     private TitledBorder studentCommonBorder;
     private TitledBorder teacherCommonBorder;
@@ -166,7 +164,7 @@ public class UI {
         studentColour = new Color(30, 90, 20);
         teacherColour = new Color(170, 60, 10);
         adminColour = new Color(30, 50, 150);
-        courseColour = new Color(120, 120, 50);
+        Color courseColour = new Color(120, 120, 50);
         barFont = new Font("", Font.BOLD, 12);
         mainFont = new Font("", Font.PLAIN, 20);
         studentCommonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(studentColour, 2),
@@ -178,7 +176,6 @@ public class UI {
 
         EventHandler eventHandler = new EventHandler();
         mouseHandler = new MouseHandler();
-        focusHandler = new FocusHandler();
 
         newUsername = new JLabel("New username");
         newUsername.setPreferredSize(new Dimension(180, 50));
@@ -461,12 +458,10 @@ public class UI {
         studentMainPanelTertiary.setOpaque(false);
         JPanel currentCredits = new JPanel();
         currentCredits.setLayout(new BoxLayout(currentCredits, BoxLayout.PAGE_AXIS));
-        prepareCourseListItems(currentCredits, student.getStudentCourses().keySet().toArray(new Course[0]));
-        currentCredits.setPreferredSize(new Dimension(300, 200));
-        currentCredits.setFont(mainFont);
+        prepareCourseListItems(currentCredits, student.getStudentCourses());
         JPanel pastCredits = new JPanel();
         pastCredits.setLayout(new BoxLayout(pastCredits, BoxLayout.PAGE_AXIS));
-        prepareCourseListItems(pastCredits, student.getPastCourses().keySet().toArray(new Course[0]));
+        prepareCourseListItems(pastCredits, student.getPastCourses());
         JScrollPane pane1 = new JScrollPane(currentCredits);
         TitledBorder border1 = new TitledBorder(studentCommonBorder);
         border1.setTitle("Current credits");
@@ -475,8 +470,8 @@ public class UI {
         border1.setTitleFont(mainFont);
         pane1.setBorder(border1);
         JScrollPane pane2 = new JScrollPane(pastCredits);
-        pane1.setPreferredSize(new Dimension(350, 250));
-        pane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        pane2.setPreferredSize(new Dimension(350, 250));
+        pane2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         TitledBorder border2 = new TitledBorder(studentCommonBorder);
         border2.setTitle("Past credits");
         border2.setTitleFont(mainFont);
@@ -807,7 +802,15 @@ public class UI {
         border1.setTitleFont(mainFont);
         JPanel currentCredits = new JPanel();
         currentCredits.setLayout(new BoxLayout(currentCredits, BoxLayout.PAGE_AXIS));
-        prepareCourseListItemsWithActions(currentCredits, thisTeacher.getTeacherCourses());
+        ArrayList<Course> teacherCourses = new ArrayList<>();
+        int index;
+        for (Course crs:
+             thisTeacher.getTeacherCourses()) {
+            index = courses.indexOf(crs);
+            if(index >= 0)
+                teacherCourses.add(courses.get(index));
+        }
+        prepareCourseListItemsWithActions(currentCredits, teacherCourses);
         currentCredits.setFont(mainFont);
         JScrollPane pane1 = new JScrollPane(currentCredits);
         pane1.setPreferredSize(new Dimension(350, 250));
@@ -1113,7 +1116,7 @@ public class UI {
         pane2.setBorder(border2);
         JPanel coursesList = new JPanel();
         coursesList.setLayout(new BoxLayout(coursesList, BoxLayout.PAGE_AXIS));
-        prepareCourseListItems(coursesList, courses.toArray(new Course[0]));
+        prepareCourseListItems(coursesList, courses);
         TitledBorder border3 = new TitledBorder(adminCommonBorder);
         border3.setTitle("Courses");
         border3.setTitleFont(mainFont);
@@ -1155,11 +1158,25 @@ public class UI {
         adminSTPanel.setOpaque(false);
     }
 
-    private void prepareCourseListItems(JPanel mainPanel, Course[] courseItems) {
+    private void prepareCourseListItems(JPanel mainPanel, HashMap<Course, Float> courseItems) {
+        for (Map.Entry<Course, Float> course:
+                courseItems.entrySet()) {
+            JPanel courseThumbnail = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+            courseThumbnail.setMinimumSize(new Dimension(200, 80));
+            courseThumbnail.setBorder(studentCommonBorder);
+            courseThumbnail.add(new JLabel("Subject: " + course.getKey().getSubject() + ""));
+            courseThumbnail.add(new JLabel("Teacher: " + course.getKey().getTeacher().getUserName()));
+            courseThumbnail.add(new JLabel("Attendants: " + course.getKey().getAttendants() + ""));
+            courseThumbnail.add(new JLabel("Grade: " + course.getValue()));
+            mainPanel.add(courseThumbnail);
+        }
+    }
+
+    private void prepareCourseListItems(JPanel mainPanel, ArrayList<Course> courseItems) {
         for (Course course:
                 courseItems) {
             JPanel courseThumbnail = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-            courseThumbnail.setMinimumSize(new Dimension(200, 80));
+            courseThumbnail.setMinimumSize(new Dimension(150, 80));
             courseThumbnail.setBorder(studentCommonBorder);
             courseThumbnail.add(new JLabel("Subject: " + course.getSubject() + ""));
             courseThumbnail.add(new JLabel("Teacher: " + course.getTeacher().getUserName()));
@@ -1179,38 +1196,52 @@ public class UI {
             courseThumbnail.add(new JLabel("Attendants: " + course.getAttendants() + ""));
             if(workingMember instanceof Teacher) {
                 JButton close = new JButton("Close");
-                close.addMouseListener(new MouseAdapter() {
+                close.addActionListener(new ActionListener() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                        System.out.println("Clicked");
-                        for (Student student :
-                                course.getCourseStudents().keySet()) {
-                            student.endCourse(course);
+                    public void actionPerformed(ActionEvent e) {
+                        Course removedCourse = null;
+                        for (Course crs:
+                                courses) {
+                            if(crs.equals(course)) {
+                                removedCourse = crs;
+                            }
                         }
-                        course.getTeacher().removeCourse(course);
-                        courses.remove(course);
-                        try {
-                            saver.writeCourses(courses);
-                            saver.writeStudents(students);
-                            saver.writeTeachers(teachers);
-                            errorLabel.setText("");
-                            successLabel.setText("Successfully closed");
-                        } catch (IOException ex) {
-                            errorLabel.setText("Failed, try reopening the app");
-                            successLabel.setText("");
+                        if(removedCourse != null) {
+                            for (Student student:
+                                    removedCourse.getCourseStudents()) {
+                                student.addToPastCourses(removedCourse);
+                                removedCourse.getTeacher().removeCourse(removedCourse);
+                            }
+                            courses.remove(removedCourse);
+                            setTeacherPanel();
+                            setTeacherMainBoard();
+                            teacherPanel.add(teacherMainPanel, BorderLayout.CENTER);
+                            frame.setContentPane(teacherPanel);
+                            frame.revalidate();
+                            try {
+                                saver.writeCourses(courses);
+                                saver.writeStudents(students);
+                                saver.writeTeachers(teachers);
+                                errorLabel.setText("");
+                                successLabel.setText("Successfully closed");
+                            } catch (IOException ex) {
+                                errorLabel.setText("Failed, try reopening the app");
+                                successLabel.setText("");
+                            }
                         }
-                        frame.revalidate();
                     }
                 });
                 courseThumbnail.add(close);
                 JButton viewStudents = new JButton("View Students");
-                viewStudents.addMouseListener(new MouseAdapter() {
+                viewStudents.addActionListener(new ActionListener() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                        System.out.println("Clicked");
-                        courseStudents = new JPanel();
+                    public void actionPerformed(ActionEvent e) {
                         courseStudents.setLayout(new BoxLayout(courseStudents, BoxLayout.PAGE_AXIS));
                         prepareStudentListItemsWithActions(courseStudents, course);
+                        setTeacherPanel();
+                        setTeacherMainBoard();
+                        teacherPanel.add(teacherMainPanel, BorderLayout.CENTER);
+                        frame.setContentPane(teacherPanel);
                         frame.revalidate();
                     }
                 });
@@ -1218,19 +1249,17 @@ public class UI {
             }
             else if(workingMember instanceof Student) {
                 JButton viewDetails = new JButton("View Details");
-                viewDetails.addMouseListener(new MouseAdapter() {
+                viewDetails.addActionListener(new ActionListener() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                        System.out.println("clicked");
+                    public void actionPerformed(ActionEvent e) {
                         courseDescription.setText(course.getDescription());
                     }
                 });
                 courseThumbnail.add(viewDetails);
                 JButton addCourse = new JButton("Enroll");
-                addCourse.addMouseListener(new MouseAdapter() {
+                addCourse.addActionListener(new ActionListener() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                        System.out.println("Clicked");
+                    public void actionPerformed(ActionEvent e) {
                         Student student = (Student) workingMember;
                         if(student.getAverage() < 17 && student.getCurrentCredits() + course.getCredits() > 20
                                 || student.getAverage() >= 17 && student.getCurrentCredits() + course.getCredits() > 24) {
@@ -1260,9 +1289,15 @@ public class UI {
                         }
                         student.addToCourses(course);
                         course.addStudent(student);
+                        setStudentPanel();
+                        setCreditSelectionPanel();
+                        studentPanel.add(creditSelectionPanel, BorderLayout.CENTER);
+                        frame.setContentPane(studentPanel);
+                        frame.revalidate();
                         try {
                             saver.writeStudents(students);
                             saver.writeCourses(courses);
+                            saver.writeTeachers(teachers);
                         } catch (IOException ex) {
                             errorLabel.setText("Failed, try reopening the app");
                             successLabel.setText("");
@@ -1291,22 +1326,62 @@ public class UI {
     }
 
     private void prepareStudentListItemsWithActions(JPanel mainPanel, Course selectedCourse) {
-        for (Map.Entry<Student, Float> entry:
-                selectedCourse.getCourseStudents().entrySet()) {
+        mainPanel.removeAll();
+        for (Student student:
+                selectedCourse.getCourseStudents()) {
+            Student std = null;
+            for (Student stu:
+                 students) {
+                if(stu.equals(student))
+                    std = stu;
+            }
             JPanel courseThumbnail = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
-            courseThumbnail.setMaximumSize(new Dimension(300, 50));
+            courseThumbnail.setMinimumSize(new Dimension(300, 50));
             courseThumbnail.setBorder(studentCommonBorder);
-            courseThumbnail.add(new JLabel("Username: " + entry.getKey().getUserName() + ""));
-            courseThumbnail.add(new JLabel("Average: " + entry.getKey().getAverage() + ""));
-            courseThumbnail.add(new JLabel("Grade: " + entry.getValue() + ""));
-            JButton grade = new JButton("Grade");
-            grade.addMouseListener(new MouseAdapter() {
+            courseThumbnail.add(new JLabel("Username: " + student.getUserName() + ""));
+            courseThumbnail.add(new JLabel("Average: " + student.getAverage() + ""));
+            if(std != null)
+                for (Course crs:
+                     courses) {
+                    if(crs.equals(selectedCourse))
+                        courseThumbnail.add(new JLabel("Grade: " + std.getStudentCourses().get(crs) + ""));
+                }
+            courseThumbnail.add(new JLabel("Grade this student: "));
+            JTextField grade = new JTextField();
+            grade.setPreferredSize(new Dimension(30, 30));
+            grade.addActionListener(new ActionListener() {
                 @Override
-                public void mouseClicked(MouseEvent e) {
-                    System.out.println("Clicked");
-                    entry.setValue(createGradingDialogue(selectedCourse.getTeacher()));
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        float mark = Float.parseFloat(grade.getText());
+                        if(mark < 0 || mark > 20)
+                            throw new NumberFormatException();
+                        Student std1 = null;
+                        for (Student stu:
+                                students) {
+                            if(stu.equals(student))
+                                std1 = stu;
+                        }
+                        if(std1 != null)
+                            for (Course crs:
+                                    courses) {
+                                if(crs.equals(selectedCourse))
+                                    std1.getStudentCourses().put(crs, mark);
+                            }
+                        saver.writeStudents(students);
+                        saver.writeTeachers(teachers);
+                        saver.writeCourses(courses);
+                        successLabel.setText("Successfully done");
+                        errorLabel.setText("");
+                    } catch (NumberFormatException ex) {
+                        errorLabel.setText("Wrong grade entered");
+                        successLabel.setText("");
+                    } catch (IOException ex) {
+                        errorLabel.setText("Failed, try reopening the app");
+                    }
                 }
             });
+            courseThumbnail.add(grade);
             mainPanel.add(courseThumbnail);
         }
     }
@@ -1322,43 +1397,11 @@ public class UI {
         }
     }
 
-    private float createGradingDialogue(Teacher teacher) {
-
-        final float[] grade = new float[1];
-
-        JDialog dialog = new JDialog();
-        dialog.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        JPanel panel = new JPanel(new GridLayout(4, 2, 5, 5));
-        panel.add(new JLabel("Grade:"));
-        JTextField gradeField = new JTextField();
-        panel.add(gradeField);
-        panel.add(new JLabel("Password:"));
-        JPasswordField passwordField = new JPasswordField();
-        panel.add(passwordField);
-        JButton button = new JButton("Grade");
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(Arrays.toString(passwordField.getPassword()).equals(Arrays.toString(teacher.getPassword())))
-                    try {
-                        float mark = Float.parseFloat(gradeField.getText());
-                        if(mark >= 0 && mark <= 20) {
-                            grade[0] = mark;
-                            dialog.dispose();
-                        }
-                    } catch (NumberFormatException ex) {
-                        errorLabel.setText("Wrong input");
-                    }
-            }
-        });
-        return grade[0];
-    }
-
     private boolean isTimeFilled(Student student, Course course) {
         for (Course studentCourse:
                 student.getStudentCourses().keySet())
             if(studentCourse.getDay() == course.getDay()
-                    || studentCourse.getTime() == course.getTime())
+                    && studentCourse.getTime() == course.getTime())
                 return true;
         return false;
     }
@@ -1434,7 +1477,7 @@ public class UI {
                                 break;
                             }
                         }
-                        if (workingMember != null && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
+                        if (workingMember != null && workingMember instanceof Teacher && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
                             errorLabel.setText("");
                             ui.setTeacherPanel();
                             ui.setTeacherMainBoard();
@@ -1451,7 +1494,7 @@ public class UI {
                                 break;
                             }
                         }
-                        if (workingMember != null && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
+                        if (workingMember != null && workingMember instanceof Student && isPasswordCorrect(workingMember.getPassword(), passwordField.getPassword())) {
                             errorLabel.setText("");
                             ui.setStudentPanel();
                             ui.setStudentMainBoard();
@@ -1591,8 +1634,6 @@ public class UI {
                         successLabel.setText("Successfully added");
                     }
                 }
-                newUsernameField.setText("");
-                newPasswordField.setText("");
             }
             else if(e.getSource().equals(teacherAddCourse)) {
                 if(capacityF.getText().length() == 0) {
@@ -1866,19 +1907,5 @@ public class UI {
             frame.revalidate();
         }
 
-    }
-    public class FocusHandler implements FocusListener {
-
-        @Override
-        public void focusGained(FocusEvent e) {
-            JPanel panel = (JPanel) e.getSource();
-            panel.setBackground(courseColour);
-        }
-
-        @Override
-        public void focusLost(FocusEvent e) {
-            JPanel panel = (JPanel) e.getSource();
-            panel.setBackground(Color.white);
-        }
     }
 }

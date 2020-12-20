@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Map;
 
 public class Student extends Member {
 
@@ -12,6 +13,7 @@ public class Student extends Member {
 
     public Student(String userName, char[] password) {
         super(userName, password);
+        totalCredits = 0;
         average = 0;
         balance = 0;
         currentCredits = 0;
@@ -31,7 +33,7 @@ public class Student extends Member {
         super.setUserName(userName);
     }
 
-    public void calculateAverage(Course course, float courseGrade) {
+    public void calculateAverage(Course course, Float courseGrade) {
         average = average * totalCredits + course.getCredits() * courseGrade;
         setTotalCredits(totalCredits + course.getCredits());
         average /= totalCredits;
@@ -79,9 +81,31 @@ public class Student extends Member {
         return pastCourses;
     }
 
-    public void addToPastCourses(Course pastCourse, float grade) {
+    public void addToPastCourses(Course pastCourse) {
+        float grade = getGrade(pastCourse);
         pastCourses.put(pastCourse, grade);
+        removeCurrentCourse(pastCourse);
         calculateAverage(pastCourse, grade);
+    }
+
+    private float getGrade(Course pastCourse) {
+        for (Map.Entry<Course, Float> entry:
+             studentCourses.entrySet()) {
+            if(entry.getKey().equals(pastCourse))
+                return entry.getValue();
+        }
+        return -1;
+    }
+
+    private void removeCurrentCourse(Course pastCourse) {
+        Map.Entry<Course, Float> courseFloatEntry = null;
+        for (Map.Entry<Course, Float> entry:
+                studentCourses.entrySet()) {
+            if(entry.getKey().equals(pastCourse))
+                courseFloatEntry = entry;
+        }
+        if(courseFloatEntry != null)
+            studentCourses.remove(courseFloatEntry.getKey());
     }
 
     private void setAllFalse() {
@@ -120,11 +144,6 @@ public class Student extends Member {
         }
     }
 
-    public void endCourse(Course course) {
-        float grade = studentCourses.remove(course);
-        calculateAverage(course, grade);
-        pastCourses.put(course, grade);
-    }
     @Override
     public boolean equals(Object o) {
         return super.equals(o);

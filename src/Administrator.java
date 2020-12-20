@@ -31,4 +31,14 @@ public class Administrator extends Member {
     public String getUserName() {
         return super.getUserName();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && this.getClass() == o.getClass();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

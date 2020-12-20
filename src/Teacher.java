@@ -38,7 +38,14 @@ public class Teacher extends Member {
     }
 
     public void removeCourse(Course course) {
-        teacherCourses.remove(course);
+        Course crs = null;
+        for (Course current:
+             teacherCourses) {
+            if(current.equals(course))
+                crs = current;
+        }
+        if(crs != null)
+            teacherCourses.remove(crs);
     }
 
     @Override

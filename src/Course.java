@@ -1,6 +1,6 @@
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Objects;
 
 public class Course implements Serializable {
 
@@ -13,13 +13,12 @@ public class Course implements Serializable {
     private int credits;
     private int capacity;
     private int attendants;
-    private HashMap<Student, Float> courseStudents;
+    private ArrayList<Student> courseStudents;
 
     public Course() {
         attendants = 0;
-        courseStudents = new HashMap<>();
+        courseStudents = new ArrayList<>();
         prerequisites = new ArrayList<>();
-        courseStudents = new HashMap<>();
     }
 
     public void setSubject(Subjects subject) {
@@ -101,18 +100,19 @@ public class Course implements Serializable {
         return description;
     }
 
-    public HashMap<Student, Float> getCourseStudents() {
+    public ArrayList<Student> getCourseStudents() {
         return courseStudents;
     }
 
     public void addStudent(Student student) {
-        courseStudents.put(student, (float) 0);
+        courseStudents.add(student);
         ++attendants;
         setDescription();
     }
 
     public void setPrerequisites(ArrayList<Subjects> prerequisites) {
-        this.prerequisites = prerequisites;
+        if(prerequisites != null)
+            this.prerequisites = prerequisites;
     }
 
     public ArrayList<Subjects> getPrerequisites() {
@@ -121,5 +121,21 @@ public class Course implements Serializable {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return teacher != null && course.teacher != null &&
+                teacher.equals(course.teacher) &&
+                day == course.day &&
+                time == course.time;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teacher, day, time);
     }
 }

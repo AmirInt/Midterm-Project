@@ -52,7 +52,6 @@ public class UniversitySystem {
         try(FileInputStream inputStream = new FileInputStream("Project Files\\Files\\Administrator.dat");
             ObjectInputStream objectReader = new ObjectInputStream(inputStream)) {
             administrator = (Administrator) objectReader.readObject();
-            objectReader.close();
         } catch (IOException | ClassNotFoundException ex) {
             administrator = Administrator.getInstance("Admin", new char[]{'a', 'd', 'm', 'i', 'n', 'a', 'd', 'm', 'i', 'n'});
         }
