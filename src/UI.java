@@ -9,11 +9,16 @@ import java.util.*;
  * Class UI is responsible for creating the graphical user interface
  * by creating the JFrame and the different panels for the students,
  * the teachers and the admin.
+ * @author AmirFazlollahi
+ * @since the dawn of time
+ * @version -1
  */
 public class UI {
 
+//    This class is a singleton
     private static UI ui = null;
 
+//    Main attributes
     private Administrator administrator;
     private ArrayList<Student> students;
     private ArrayList<Teacher> teachers;
@@ -23,6 +28,7 @@ public class UI {
     private MouseHandler mouseHandler;
     private Saviour saver;
 
+    //    fields commonly used throughout the code
     private JFrame frame;
     private final Color studentColour;
     private final Color teacherColour;
@@ -32,23 +38,19 @@ public class UI {
     private TitledBorder teacherCommonBorder;
     private TitledBorder adminCommonBorder;
     private Font mainFont;
+    private JLabel successLabel;
+    private JLabel errorLabel;
     private JTextField newUsernameField;
     private JPasswordField newPasswordField;
     private JPasswordField repeatPasswordField;
-    private JButton changeButton;
-    private JButton setButton;
-    private JLabel successLabel;
-    private JButton addAsStudentButton;
-    private JButton addAsTeacherButton;
-    private JPanel courseStudents;
+    private JLabel repeatPassword;
     private JLabel newUsername;
     private JLabel newPassword;
-    private JLabel repeatPassword;
+    private JButton changeButton;
 
     //    loginPanel accessories
     private JPanel loginPanel;
     private JComboBox<String> comboBox;
-    private JLabel errorLabel;
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton enterButton;
@@ -90,6 +92,7 @@ public class UI {
     private JTextField capacityF;
     private JComboBox<Days> daysC;
     private JComboBox<Times> timesC;
+    private JPanel courseStudents;
 
     //    adminPanel accessories
     private JPanel adminPanel;
@@ -104,6 +107,9 @@ public class UI {
     private JLabel adminPanelExit;
     private JComboBox<String> creditsC;
     private JTextField[][] mealPrices;
+    private JButton addAsStudentButton;
+    private JButton addAsTeacherButton;
+    private JButton setButton;
 
     //    constraints variable is for managing the items of the GridBagLayout
     //    wherever its needed
@@ -127,6 +133,12 @@ public class UI {
 
     /**
      * Instantiates this class
+     * @param administrator The administrator of the system
+     * @param students The students list of the system
+     * @param teachers The teachers list of the system
+     * @param courses The courses list of the system
+     * @param refectorySchedule The refectory meal schedule
+     * @param refectoryPrices The refectory meal prices
      */
     private UI(Administrator administrator, ArrayList<Student> students, ArrayList<Teacher> teachers,
                ArrayList<Course> courses, String[][] refectorySchedule, float[][] refectoryPrices, Saviour saver) {
@@ -139,6 +151,75 @@ public class UI {
         this.refectorySchedule = refectorySchedule;
         this.saver = saver;
 
+
+
+//        Setting some common attributes in the programme
+        studentColour = new Color(30, 90, 20);
+        teacherColour = new Color(170, 60, 10);
+        adminColour = new Color(30, 50, 150);
+        Color courseColour = new Color(120, 120, 50);
+        barFont = new Font("", Font.BOLD, 12);
+        mainFont = new Font("", Font.PLAIN, 20);
+        studentCommonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(studentColour, 2),
+                "", 4, 0, mainFont);
+        teacherCommonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(teacherColour, 2),
+                "", 4, 0, mainFont);
+        adminCommonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(adminColour, 2),
+                "", 4, 0, mainFont);
+        errorLabel = new JLabel();
+        successLabel = new JLabel();
+        errorLabel.setForeground(Color.RED);
+        successLabel.setForeground(Color.GREEN);
+        EventHandler eventHandler = new EventHandler();
+        mouseHandler = new MouseHandler();
+
+//        Creating the accessories for our enter page
+        newUsername = new JLabel("New username");
+        newUsername.setPreferredSize(new Dimension(180, 50));
+        newUsername.setFont(mainFont);
+        newPassword = new JLabel("New Password");
+        newPassword.setPreferredSize(new Dimension(180, 50));
+        newPassword.setFont(mainFont);
+        newPassword.setPreferredSize(new Dimension(180, 50));
+        repeatPassword = new JLabel("Repeat Password");
+        repeatPassword.setFont(mainFont);
+        usernameField = new JTextField();
+        usernameField.setPreferredSize(new Dimension(40, 25));
+        passwordField = new JPasswordField();
+        passwordField.setPreferredSize(new Dimension(40, 25));
+        usernameField.addActionListener(eventHandler);
+        passwordField.addActionListener(eventHandler);
+        enterButton = new JButton("Enter");
+        enterButton.setPreferredSize(new Dimension(200, 40));
+        enterButton.setForeground(new Color(0, 0, 100));
+        enterButton.setFont(new Font("", Font.PLAIN, 20));
+        enterButton.addActionListener(eventHandler);
+
+//        Creating components for the credentials change page
+        newUsernameField = new JTextField();
+        newUsernameField.setFont(mainFont);
+        newPasswordField = new JPasswordField();
+        repeatPasswordField = new JPasswordField();
+        changeButton = new JButton("Change");
+        changeButton.setFont(mainFont);
+        changeButton.addActionListener(eventHandler);
+
+//        Student panel components:
+
+//        Components for the credit page
+        cardNumberT = new JTextField();
+        cardNumberT.setFont(mainFont);
+        cardNumberT.addActionListener(eventHandler);
+        balanceT = new JTextField();
+        balanceT.setFont(mainFont);
+        balanceT.addActionListener(eventHandler);
+        passwordF = new JPasswordField();
+        passwordF.addActionListener(eventHandler);
+        purchaseBalanceB = new JButton("Purchase");
+        purchaseBalanceB.setFont(mainFont);
+        purchaseBalanceB.addActionListener(eventHandler);
+
+//        Setting up the reservation panel
         this.mealPrices = new JTextField[7][2];
         for (int i = 0; i < 7; ++i) {
             for (int j = 0; j < 2; ++j) {
@@ -158,92 +239,20 @@ public class UI {
                 meals[i][j] = new JTextField(refectorySchedule[i][j]);
             }
         }
-
-
-//        Setting some common attributes in the programme
-        studentColour = new Color(30, 90, 20);
-        teacherColour = new Color(170, 60, 10);
-        adminColour = new Color(30, 50, 150);
-        Color courseColour = new Color(120, 120, 50);
-        barFont = new Font("", Font.BOLD, 12);
-        mainFont = new Font("", Font.PLAIN, 20);
-        studentCommonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(studentColour, 2),
-                "", 4, 0, mainFont);
-        teacherCommonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(teacherColour, 2),
-                "", 4, 0, mainFont);
-        adminCommonBorder = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(adminColour, 2),
-                "", 4, 0, mainFont);
-
-        EventHandler eventHandler = new EventHandler();
-        mouseHandler = new MouseHandler();
-
-        newUsername = new JLabel("New username");
-        newUsername.setPreferredSize(new Dimension(180, 50));
-        newUsername.setFont(mainFont);
-        newPassword = new JLabel("New Password");
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        newPassword.setFont(mainFont);
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        repeatPassword = new JLabel("Repeat Password");
-        repeatPassword.setFont(mainFont);
-        errorLabel = new JLabel();
-        errorLabel.setForeground(Color.RED);
-        successLabel = new JLabel();
-        successLabel.setForeground(Color.GREEN);
-
-        usernameField = new JTextField();
-        usernameField.setPreferredSize(new Dimension(40, 25));
-        passwordField = new JPasswordField();
-        passwordField.setPreferredSize(new Dimension(40, 25));
-        usernameField.addActionListener(eventHandler);
-        passwordField.addActionListener(eventHandler);
-        enterButton = new JButton("Enter");
-        enterButton.setPreferredSize(new Dimension(200, 40));
-        enterButton.setForeground(new Color(0, 0, 100));
-        enterButton.setFont(new Font("", Font.PLAIN, 20));
-        enterButton.addActionListener(eventHandler);
-
-        newUsernameField = new JTextField();
-        newUsernameField.setFont(mainFont);
-        newPasswordField = new JPasswordField();
-        repeatPasswordField = new JPasswordField();
-        changeButton = new JButton("Change");
-        changeButton.setFont(mainFont);
-        changeButton.addActionListener(eventHandler);
-
+//        reserveButton for the reservation page
         reserveButton = new JButton("Reserve");
         reserveButton.setFont(mainFont);
         reserveButton.addActionListener(eventHandler);
 
-        cardNumberT = new JTextField();
-        cardNumberT.setFont(mainFont);
-        cardNumberT.addActionListener(eventHandler);
-        balanceT = new JTextField();
-        balanceT.setFont(mainFont);
-        balanceT.addActionListener(eventHandler);
-        passwordF = new JPasswordField();
-        passwordF.addActionListener(eventHandler);
-        purchaseBalanceB = new JButton("Purchase");
-        purchaseBalanceB.setFont(mainFont);
-        purchaseBalanceB.addActionListener(eventHandler);
+//        courseDescription gives a brief info about the selected course
+        courseDescription = new JTextArea();
 
-        setButton = new JButton("Set");
-        setButton.setFont(mainFont);
-        setButton.addActionListener(eventHandler);
+//        Setting up the teacher panel:
 
+//        courseStudents' for the teacher panel
         courseStudents = new JPanel();
 
-        teacherAddCourse = new JButton("Add");
-        teacherAddCourse.setFont(mainFont);
-        teacherAddCourse.addActionListener(eventHandler);
-
-        addAsStudentButton = new JButton("Add As Student");
-        addAsStudentButton.setFont(mainFont);
-        addAsStudentButton.addActionListener(eventHandler);
-        addAsTeacherButton = new JButton("Add As Teacher");
-        addAsTeacherButton.setFont(mainFont);
-        addAsTeacherButton.addActionListener(eventHandler);
-
+//        Setting components for the course creation panel
         prerequisiteSubjects = new JList<>(Subjects.values());
         prerequisiteSubjects.setFont(mainFont);
         prerequisiteSubjects.setSelectionForeground(Color.WHITE);
@@ -258,10 +267,26 @@ public class UI {
         daysC.setFont(mainFont);
         timesC = new JComboBox<>(Times.values());
         timesC.setFont(mainFont);
+        teacherAddCourse = new JButton("Add");
+        teacherAddCourse.setFont(mainFont);
+        teacherAddCourse.addActionListener(eventHandler);
 
-        courseDescription = new JTextArea();
+//        Setting up the admin panel:
 
-//        Setting the frame
+//        setButton's for the admin refectory panel
+        setButton = new JButton("Set");
+        setButton.setFont(mainFont);
+        setButton.addActionListener(eventHandler);
+
+//        Admin panel requires buttons to add teachers or students!
+        addAsStudentButton = new JButton("Add As Student");
+        addAsStudentButton.setFont(mainFont);
+        addAsStudentButton.addActionListener(eventHandler);
+        addAsTeacherButton = new JButton("Add As Teacher");
+        addAsTeacherButton.setFont(mainFont);
+        addAsTeacherButton.addActionListener(eventHandler);
+
+//        Setting the frame finally
         frame = new JFrame("University Management System");
         frame.setSize(740, 560);
         frame.setResizable(false);
@@ -277,6 +302,7 @@ public class UI {
      */
     public void setLoginPanel() {
 
+//        Creating the top of the page
         JLabel entranceMode = new JLabel("Enter as");
         entranceMode.setForeground(Color.WHITE);
         entranceMode.setFont(barFont);
@@ -290,6 +316,7 @@ public class UI {
         introPanel.add(comboBox);
         introPanel.setBackground(new Color(30, 50, 150));
 
+//        Creating the main part of the page
         JPanel creditsBoard = new JPanel();
         creditsBoard.setLayout(new GridLayout(2, 2, 5,5));
         JLabel usernameL = new JLabel("Username");
@@ -343,6 +370,7 @@ public class UI {
     public void setStudentPanel() {
 
 //        Creating the general studentPanel here with its buttons and fields
+//        (the "BorderLayout.NORTH" part)
         studentPanel = new ImageJPanel("Project Files\\Pictures\\istockphoto-610850338-1024x1024 2.jpg");
         studentPanel.setLayout(new BorderLayout(5, 5));
         studentMainB = new JLabel("Main Panel");
@@ -394,9 +422,12 @@ public class UI {
 
     /**
      * Creates the student main panel
+     * This panel includes the username and password section, current courses
+     * and the past courses
      */
     public void setStudentMainBoard() {
 
+//        Creating the "BorderLayout.CENTER" section of the panel
         studentMainPanel = new JPanel(new BorderLayout(5, 5));
         studentMainPanel.setOpaque(false);
         JPanel studentMainPanelSecondary = new JPanel(new GridBagLayout());
@@ -451,9 +482,12 @@ public class UI {
         constraints.gridx = 1;
         constraints.anchor = GridBagConstraints.SOUTHEAST;
         studentMainPanelSecondary.add(new JLabel(student.getBalance() + ""), constraints);
+
+//        Resetting the constraints
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.anchor = GridBagConstraints.CENTER;
+
         JPanel studentMainPanelTertiary = new JPanel(new GridLayout(3, 1));
         studentMainPanelTertiary.setOpaque(false);
         JPanel currentCredits = new JPanel();
@@ -478,6 +512,8 @@ public class UI {
         pane2.setBorder(border2);
         studentMainPanelTertiary.add(pane1);
         studentMainPanelTertiary.add(pane2);
+
+//        programme is a table of the curriculum
         JTable programme = new JTable(6, 4);
         programme.setEnabled(false);
         programme.setOpaque(false);
@@ -533,6 +569,7 @@ public class UI {
 
     /**
      * Creates the student username and password resetting panel
+     * The student can change their username or password using this panel
      */
     public void setStudentUNPSPanel() {
 
@@ -553,11 +590,11 @@ public class UI {
         secondary.add(errorLabel);
         secondary.add(successLabel);
         UNPSPanel.add(secondary, constraints);
-
     }
 
     /**
      * Creates the student balance management panel
+     * The student can purchase balance using this page
      */
     public void setBalancePanel() {
 
@@ -589,11 +626,11 @@ public class UI {
         balancePanelSecondary.add(errorLabel);
         balancePanelSecondary.add(successLabel);
         balancePanel.add(balancePanelSecondary, constraints);
-
     }
 
     /**
      * Creates the student reservation panel
+     * The student can reserve meals through this panel
      */
     public void setStudentReservationPanel() {
 
@@ -672,6 +709,7 @@ public class UI {
 
     /**
      * Creates the student credit selection panel
+     * The student can select credits and new courses here
      */
     public void setCreditSelectionPanel() {
 
@@ -700,7 +738,11 @@ public class UI {
         creditSelectionPanel.add(creditSelectionPanelSecondary);
         JPanel presentCreditsList = new JPanel();
         presentCreditsList.setLayout(new BoxLayout(presentCreditsList, BoxLayout.PAGE_AXIS));
+
+//        This method adds them items to the presentCreditsList (which is not a list!)
+//        and gets it ready to be displayed
         prepareCourseListItemsWithActions(presentCreditsList, courses);
+
         TitledBorder border1 = new TitledBorder(studentCommonBorder);
         border1.setTitleFont(mainFont);
         border1.setTitle("Present courses");
@@ -716,7 +758,7 @@ public class UI {
      */
     public void setTeacherPanel() {
 
-//        Creating the general and initial panel here
+//        Creating the general and initial panel here (the "BorderLayout.NORTH" part)
         teacherPanel = new ImageJPanel("Project Files\\Pictures\\istockphoto-610850338-1024x1024 2.jpg");
         teacherPanel.setLayout(new BorderLayout());
         teacherMainB = new JLabel("Main panel");
@@ -754,9 +796,13 @@ public class UI {
 
     /**
      * Creates the teacher main panel
+     * This panel includes the teachers username and password (high security
+     * levels!), one board to view the current courses and their students and to
+     * close a course, and another board to view and grade a selected course
      */
     public void setTeacherMainBoard() {
 
+//        Creating the main part (the "BordetLayout.CENTER" section)
         teacherMainPanel = new JPanel(new BorderLayout(10, 10));
         teacherMainPanel.setOpaque(false);
         JPanel teacherMainPanelSecondary = new JPanel(new GridBagLayout());
@@ -803,6 +849,8 @@ public class UI {
         JPanel currentCredits = new JPanel();
         currentCredits.setLayout(new BoxLayout(currentCredits, BoxLayout.PAGE_AXIS));
         ArrayList<Course> teacherCourses = new ArrayList<>();
+
+//        This piece adds the teacher's current courses to the currentCredits panel
         int index;
         for (Course crs:
              thisTeacher.getTeacherCourses()) {
@@ -811,6 +859,7 @@ public class UI {
                 teacherCourses.add(courses.get(index));
         }
         prepareCourseListItemsWithActions(currentCredits, teacherCourses);
+
         currentCredits.setFont(mainFont);
         JScrollPane pane1 = new JScrollPane(currentCredits);
         pane1.setPreferredSize(new Dimension(350, 250));
@@ -842,6 +891,7 @@ public class UI {
 
     /**
      * Creates the teacher username and password management panel
+     * The teacher can reset their username or password here
      */
     public void setTeacherUNPSPanel() {
 
@@ -867,6 +917,7 @@ public class UI {
 
     /**
      * Creates the teacher course building panel
+     * The teacher can add new courses to the system through this panel
      */
     public void setCourseCreationPanel() {
 
@@ -917,6 +968,7 @@ public class UI {
         constraints.gridx = 1;
         prerequisiteSubjects.clearSelection();
         teacherAddToCoursesPanel.add(prerequisiteSubjects, constraints);
+//        Resetting the constraints
         constraints.gridx = 0;
     }
 
@@ -925,7 +977,7 @@ public class UI {
      */
     public void setAdminPanel() {
 
-//        Creating the initial admin panel here
+//        Creating the initial admin panel here (the "BorderLayou.NORTH" section)
         adminPanel = new ImageJPanel("Project Files\\Pictures\\white-technology-2K-wallpaper.jpg");
         adminPanel.setLayout(new BorderLayout());
         adminMainB = new JLabel("Main panel");
@@ -971,9 +1023,11 @@ public class UI {
 
     /**
      * Creates the admin main panel
+     * Just showing the administrator's username and password
      */
     public void setAdminMainBoard() {
 
+//        Getting the main admin main borad prepared here (the "BorderLayout.CENTER" part)
         adminMainPanel = new JPanel(new GridBagLayout());
         adminMainPanel.setOpaque(false);
         JPanel adminMainPanelSecondary = new JPanel(new GridLayout(2, 2, 10, 10));
@@ -1001,6 +1055,7 @@ public class UI {
 
     /**
      * Creates the admin username and password management panel
+     * The administrator can change their username and password here
      */
     public void setAdminUNPSPanel() {
 
@@ -1028,6 +1083,8 @@ public class UI {
 
     /**
      * Creates the admin refectory management panel
+     * The administrator sets the refectory meal schedule through
+     * this panel
      */
     public void setAdminRefectoryPanel() {
 
@@ -1090,6 +1147,8 @@ public class UI {
 
     /**
      * Creates the admin student and teacher panel
+     * This panel gives the administrator the ability to add
+     * new teachers and students
      */
     public void setAdminSTPanel() {
 
@@ -1158,6 +1217,12 @@ public class UI {
         adminSTPanel.setOpaque(false);
     }
 
+    /**
+     * Puts the courses info into some JPanels and puts them all
+     * into the single mainPanel it's given
+     * @param mainPanel The panel to contain the info
+     * @param courseItems The courses and their grades
+     */
     private void prepareCourseListItems(JPanel mainPanel, HashMap<Course, Float> courseItems) {
         for (Map.Entry<Course, Float> course:
                 courseItems.entrySet()) {
@@ -1172,6 +1237,12 @@ public class UI {
         }
     }
 
+    /**
+     * Puts the courses info into some JPanels and puts them all
+     * into the single mainPanel it's given
+     * @param mainPanel The panel to contain the info
+     * @param courseItems The courses
+     */
     private void prepareCourseListItems(JPanel mainPanel, ArrayList<Course> courseItems) {
         for (Course course:
                 courseItems) {
@@ -1185,7 +1256,15 @@ public class UI {
         }
     }
 
+    /**
+     * Puts the courses info into some JPanels and puts them all
+     * into the single mainPanel it's given. It gives the ability to
+     * view the students of each course and close that course
+     * @param mainPanel The panel to contain the info
+     * @param courseItems The courses
+     */
     private void prepareCourseListItemsWithActions(JPanel mainPanel, ArrayList<Course> courseItems) {
+
         for (Course course:
                 courseItems) {
             JPanel courseThumbnail = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 20));
@@ -1272,17 +1351,17 @@ public class UI {
                             successLabel.setText("");
                             return;
                         }
-                        if(isPreviouslyTaken(course, student)) {
+                        if(student.isPreviouslyTaken(course)) {
                             errorLabel.setText("You have previously taken this course");
                             successLabel.setText("");
                             return;
                         }
-                        if(!isPrerequisitesTaken(course, student)) {
+                        if(!student.arePrerequisitesTaken(course)) {
                             errorLabel.setText("Prerequisites needed");
                             successLabel.setText("");
                             return;
                         }
-                        if(isTimeFilled(student, course)) {
+                        if(student.isTimeFilled(course)) {
                             errorLabel.setText("Time is filled");
                             successLabel.setText("");
                             return;
@@ -1313,6 +1392,12 @@ public class UI {
         }
     }
 
+    /**
+     * Puts the students info into some JPanels and puts them all
+     * into the single mainPanel it's given
+     * @param mainPanel The panel to contain the info
+     * @param studentItems The courses
+     */
     private void prepareStudentListItems(JPanel mainPanel, ArrayList<Student> studentItems) {
         for (Student student:
                 studentItems) {
@@ -1325,6 +1410,12 @@ public class UI {
         }
     }
 
+    /**
+     * Puts the info of the students in a course into some JPanels and puts them all
+     * into the single mainPanel it's given. It provides the ability to grade them students
+     * @param mainPanel The panel to contain the info
+     * @param selectedCourse The courses
+     */
     private void prepareStudentListItemsWithActions(JPanel mainPanel, Course selectedCourse) {
         mainPanel.removeAll();
         for (Student student:
@@ -1386,6 +1477,11 @@ public class UI {
         }
     }
 
+    /**
+     * Puts the teachers info into some JPanels and puts them all
+     * into the single mainPanel it's given
+     * @param mainPanel The panel to contain the info
+     */
     private void prepareTeacherListItems(JPanel mainPanel) {
         for (Teacher teacher:
                 teachers) {
@@ -1397,62 +1493,16 @@ public class UI {
         }
     }
 
-    private boolean isTimeFilled(Student student, Course course) {
-        for (Course studentCourse:
-                student.getStudentCourses().keySet())
-            if(studentCourse.getDay() == course.getDay()
-                    && studentCourse.getTime() == course.getTime())
-                return true;
-        return false;
-    }
-
-    private boolean isPrerequisitesTaken(Course selectedCourse, Student student) {
-        boolean isPassed;
-        boolean qualified = true;
-        HashSet<Subjects> takenSubjects = new HashSet<>();
-        for (Course course:
-                student.getPastCourses().keySet()) {
-            takenSubjects.add(course.getSubject());
-        }
-        for (Course course:
-                student.getStudentCourses().keySet()) {
-            takenSubjects.add(course.getSubject());
-        }
-        if(selectedCourse.getPrerequisites() != null && selectedCourse.getPrerequisites().size() != 0)
-            for (Subjects subject:
-                    selectedCourse.getPrerequisites()) {
-                isPassed = false;
-                for (Subjects pastSubject:
-                        takenSubjects)
-                    if(subject.equals(pastSubject)) {
-                        isPassed = true;
-                        break;
-                    }
-                qualified &= isPassed;
-            }
-        return qualified;
-    }
-
-    private boolean isPreviouslyTaken(Course selectedCourse, Student student) {
-        for (Course studentPastCourse:
-                student.getPastCourses().keySet()) {
-            if(selectedCourse.getSubject() == studentPastCourse.getSubject()) {
-                return true;
-            }
-        }
-        for (Course studentCourse:
-                student.getStudentCourses().keySet()) {
-            if(selectedCourse.getSubject() == studentCourse.getSubject()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * Class EventHandler implements ActionListener and overrides the
+     * "actionPerformed" method to ride and lead the events in the programme
+     * to where they should go.
+     */
     private class EventHandler implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+//            If the user attempts login in the login page
             if(e.getSource().equals(usernameField) || e.getSource().equals(passwordField)
                     || e.getSource().equals(enterButton)) {
                 int entranceMode = comboBox.getSelectedIndex();
@@ -1503,6 +1553,10 @@ public class UI {
                         } else errorLabel.setText("Invalid username or password");
                 }
             }
+//            If the user attempts to change their username or password;
+//            new username should not be identical to any other user's and the new
+//            password should be at least 8 characters long. Changes are written to
+//            storage
             else if(e.getSource().equals(changeButton)) {
                 String newUsername = newUsernameField.getText();
                 char[] newPassword = newPasswordField.getPassword();
@@ -1556,6 +1610,8 @@ public class UI {
                 repeatPasswordField.setText("");
 
             }
+//            If the admin attempts to set this week's meal schedule;
+//            all prices from JTextField need to be a positive float
             else if(e.getSource().equals(setButton)) {
 
                 String[][] refectorySchedule1 = new String[7][2];
@@ -1592,6 +1648,9 @@ public class UI {
                 errorLabel.setText("");
                 successLabel.setText("Successfully Set");
             }
+//            If the admin attempts to add a new teacher or student.
+//            Username must be unique and passwords must be at least
+//            8 characters long. Changes are transformed to the storage
             else if(e.getSource().equals(addAsStudentButton) || e.getSource().equals(addAsTeacherButton)) {
                 if (newUsernameField.getText().length() == 0 || newPasswordField.getPassword().length < 8) {
                     errorLabel.setText("Insufficient fields");
@@ -1635,6 +1694,9 @@ public class UI {
                     }
                 }
             }
+//            If the teacher attempts to add course;
+//            new course must not coincide with the teacher's current
+//            courses and its capacity's needed to be set
             else if(e.getSource().equals(teacherAddCourse)) {
                 if(capacityF.getText().length() == 0) {
                     successLabel.setText("");
@@ -1675,6 +1737,10 @@ public class UI {
                     successLabel.setText("");
                 }
             }
+//            If the user attempts to buy credits;
+//            card number can be anything that's made up of 16 digits
+//            balance can be whatever in between 0 and 100 and the password
+//            must be 4 characters of digits.
             else if(e.getSource().equals(purchaseBalanceB)) {
                 if(cardNumberT.getText().length() != 16) {
                     errorLabel.setText("Invalid card number");
@@ -1691,7 +1757,7 @@ public class UI {
                 }
                 try {
                     float balance = Float.parseFloat(balanceT.getText());
-                    if (balance <= 0 || balance > 100) {
+                    if (balance < 0 || balance > 100) {
                         errorLabel.setText("Invalid balance");
                         successLabel.setText("");
                         return;
@@ -1718,6 +1784,11 @@ public class UI {
                 errorLabel.setText("");
                 successLabel.setText("Successfully processed");
             }
+//            If the user (student) attempts to reserve meals;
+//            meals are reserved as one by one as long as user has not
+//            run out of balance. If a checkbox is unselected, the balance
+//            refunds back to the student. Any change is written to the
+//            storage at last
             else if(e.getSource().equals(reserveButton)) {
                 Student student = (Student) workingMember;
                 for (int i = 0; i < 7; ++i) {
@@ -1747,9 +1818,16 @@ public class UI {
                 }
             }
 
+//            Refreshes the page each time an event is received
             frame.revalidate();
         }
 
+        /**
+         * If user attempts the login as student, checks if any student matches
+         * the entered credentials
+         * @param username The username entered
+         * @return true if a student with matching info exists
+         */
         private boolean doesStudentExist(String username) {
             for (Student student:
                     students) {
@@ -1759,6 +1837,12 @@ public class UI {
             return false;
         }
 
+        /**
+         * If user attempts the login as teacher, checks if any teacehr matches
+         * the entered credentials
+         * @param username The username entered
+         * @return true if a teacher with matching info exists
+         */
         private boolean doesTeacherExist(String username) {
             for (Teacher teacher:
                     teachers) {
@@ -1768,6 +1852,12 @@ public class UI {
             return false;
         }
 
+        /**
+         * Checks if the entered password matches that of the selected user
+         * @param password The user's password
+         * @param input The entered password
+         * @return true if they match
+         */
         private boolean isPasswordCorrect(char[] password, char[] input) {
             if(input.length != password.length)
                 return false;
@@ -1776,6 +1866,12 @@ public class UI {
 
     }
 
+    /**
+     * Class MouseHandler implements MouseListener and overrides the
+     * "mouseClicked" method to ride and lead the events in the programme
+     * to where they should go. This class is for handling the JLabels on
+     * top of the pages that lead to some certain panels
+     */
     private class MouseHandler extends MouseAdapter {
 
         @Override
@@ -1904,6 +2000,7 @@ public class UI {
 
             }
 
+//            Refreshes the page each time a mouse event is received
             frame.revalidate();
         }
 

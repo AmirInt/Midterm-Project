@@ -3,6 +3,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
+/**
+ * Class UniversitySystem represents a management system for a typical university in the system
+ * @author AmirFazlollahi
+ * @since the dawn of time
+ * @version -1
+ */
 public class UniversitySystem {
 
     private ArrayList<Teacher> teachers;
@@ -12,6 +18,9 @@ public class UniversitySystem {
     private String[][] refectorySchedule;
     private float[][] refectoryPrices;
 
+    /**
+     * Instantiates this class, reading data from files and starting the user interface
+     */
     public UniversitySystem() {
         Saviour saver = new Saviour();
         teachers = new ArrayList<>();
@@ -21,6 +30,9 @@ public class UniversitySystem {
         UI.getInstance(administrator, students, teachers, courses, refectorySchedule, refectoryPrices, saver);
     }
 
+    /**
+     * Reads data from files
+     */
     private void setUp() {
         try(FileInputStream inputStream = new FileInputStream("Project Files\\Files\\Teachers.dat");
             ObjectInputStream objectReader = new ObjectInputStream(inputStream)) {
@@ -73,6 +85,9 @@ public class UniversitySystem {
         }
     }
 
+    /**
+     * Sets up the array for the refectory prices
+     */
     private void setRefectoryPrices() {
         for (int i = 0; i < 7; ++i) {
             for (int j = 0; j < 2; ++j) {
@@ -81,6 +96,9 @@ public class UniversitySystem {
         }
     }
 
+    /**
+     * Sets up the array for the refectory scheduled meals
+     */
     private void setRefectorySchedule() {
         for (int i = 0; i < 7; ++i) {
             for (int j = 0; j < 2; ++j) {
