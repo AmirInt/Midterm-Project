@@ -54,6 +54,8 @@ public class UI {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton enterButton;
+    private reCAPTCHA reCAPTCHA;
+    private JTextField reCAPField;
 
     //    studentPanel accessories
     private JPanel studentPanel;
@@ -151,8 +153,6 @@ public class UI {
         this.refectorySchedule = refectorySchedule;
         this.saver = saver;
 
-
-
 //        Setting some common attributes in the programme
         studentColour = new Color(30, 90, 20);
         teacherColour = new Color(170, 60, 10);
@@ -174,17 +174,9 @@ public class UI {
         mouseHandler = new MouseHandler();
 
 //        Creating the accessories for our enter page
-        newUsername = new JLabel("New username");
-        newUsername.setPreferredSize(new Dimension(180, 50));
-        newUsername.setFont(mainFont);
-        newPassword = new JLabel("New Password");
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        newPassword.setFont(mainFont);
-        newPassword.setPreferredSize(new Dimension(180, 50));
-        repeatPassword = new JLabel("Repeat Password");
-        repeatPassword.setFont(mainFont);
         usernameField = new JTextField();
         usernameField.setPreferredSize(new Dimension(40, 25));
+        usernameField.setFont(mainFont);
         passwordField = new JPasswordField();
         passwordField.setPreferredSize(new Dimension(40, 25));
         usernameField.addActionListener(eventHandler);
@@ -194,8 +186,24 @@ public class UI {
         enterButton.setForeground(new Color(0, 0, 100));
         enterButton.setFont(new Font("", Font.PLAIN, 20));
         enterButton.addActionListener(eventHandler);
+        reCAPTCHA = new reCAPTCHA();
+        reCAPTCHA.setMaximumSize(new Dimension(150, 40));
+        reCAPTCHA.addMouseListener(mouseHandler);
+        reCAPField = new JTextField();
+        reCAPField.setPreferredSize(new Dimension(150, 40));
+        reCAPField.addActionListener(eventHandler);
+        reCAPField.setFont(mainFont);
 
 //        Creating components for the credentials change page
+        newUsername = new JLabel("New username");
+        newUsername.setPreferredSize(new Dimension(180, 50));
+        newUsername.setFont(mainFont);
+        newPassword = new JLabel("New Password");
+        newPassword.setPreferredSize(new Dimension(180, 50));
+        newPassword.setFont(mainFont);
+        newPassword.setPreferredSize(new Dimension(180, 50));
+        repeatPassword = new JLabel("Repeat Password");
+        repeatPassword.setFont(mainFont);
         newUsernameField = new JTextField();
         newUsernameField.setFont(mainFont);
         newPasswordField = new JPasswordField();
@@ -318,7 +326,7 @@ public class UI {
 
 //        Creating the main part of the page
         JPanel creditsBoard = new JPanel();
-        creditsBoard.setLayout(new GridLayout(2, 2, 5,5));
+        creditsBoard.setLayout(new GridLayout(3, 2, 5,5));
         JLabel usernameL = new JLabel("Username");
         usernameL.setForeground(Color.WHITE);
         usernameL.setFont(mainFont);
@@ -327,10 +335,13 @@ public class UI {
         passwordL.setFont(mainFont);
         usernameField.setText("");
         passwordField.setText("");
+        reCAPField.setText("");
         creditsBoard.add(usernameL);
         creditsBoard.add(usernameField);
         creditsBoard.add(passwordL);
         creditsBoard.add(passwordField);
+        creditsBoard.add(reCAPTCHA);
+        creditsBoard.add(reCAPField);
         creditsBoard.setOpaque(false);
         JLabel informLabel = new JLabel("Enter ye' username and password");
         informLabel.setPreferredSize(new Dimension(350, 50));
@@ -1504,7 +1515,11 @@ public class UI {
         public void actionPerformed(ActionEvent e) {
 //            If the user attempts login in the login page
             if(e.getSource().equals(usernameField) || e.getSource().equals(passwordField)
-                    || e.getSource().equals(enterButton)) {
+                    || e.getSource().equals(enterButton) || e.getSource().equals(reCAPField)) {
+                if(!reCAPField.getText().equals(reCAPTCHA.getCode())) {
+                    errorLabel.setText("Correct the code ya entered");
+                    return;
+                }
                 int entranceMode = comboBox.getSelectedIndex();
                 switch (entranceMode) {
                     case 0:
@@ -1877,6 +1892,12 @@ public class UI {
         @Override
         public void mouseClicked(MouseEvent e) {
             JLabel interactedLabel = (JLabel) e.getSource();
+
+            if(e.getSource().equals(reCAPTCHA)) {
+                reCAPTCHA.refresh();
+                setLoginPanel();
+                frame.setContentPane(loginPanel);
+            }
 
             if(interactedLabel.equals(studentPanelExit) || interactedLabel.equals(teacherPanelExit)
                 || interactedLabel.equals(adminPanelExit)) {
